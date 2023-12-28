@@ -1,6 +1,6 @@
 {
   "name": "react-native-code-push-plugin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Config plugin to auto configure react-native-code-push on prebuild",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -32,8 +32,8 @@
     "expo": "^49"
   },
   "devDependencies": {
-    "expo-module-scripts": "^3.0.3",
-    "expo": "^49"
+    "expo": "^49",
+    "expo-module-scripts": "^3.0.3"
   },
   "upstreamPackage": "react-native-code-push"
 }
