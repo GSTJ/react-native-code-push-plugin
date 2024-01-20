@@ -45,9 +45,9 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
     const kotlinAnchor = `override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"`;
     if (mainApplicationProps.modResults.contents.includes(kotlinAnchor)) {
       const kotlinJSBundleFileOverride = `
-      override fun getJSBundleFile(): String? {
-        return CodePush.getJSBundleFile()
-      }
+          override fun getJSBundleFile(): String? {
+            return CodePush.getJSBundleFile()
+          }
       `;
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,

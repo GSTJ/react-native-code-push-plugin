@@ -29,9 +29,9 @@ const withAndroidMainApplicationDependency = (config) => {
         const kotlinAnchor = `override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"`;
         if (mainApplicationProps.modResults.contents.includes(kotlinAnchor)) {
             const kotlinJSBundleFileOverride = `
-      override fun getJSBundleFile(): String? {
-        return CodePush.getJSBundleFile()
-      }
+          override fun getJSBundleFile(): String? {
+            return CodePush.getJSBundleFile()
+          }
       `;
             mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, kotlinAnchor, kotlinJSBundleFileOverride);
             return mainApplicationProps;
