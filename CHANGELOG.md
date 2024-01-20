@@ -6,6 +6,6 @@
 
 - Update interim README
 
-### @config-plugins/react-native-codepush 1.0.4
+### @config-plugins/react-native-codepush 1.0.5
 
 - Expo SDK 50 support
