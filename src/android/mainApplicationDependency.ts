@@ -12,20 +12,38 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
 > = (config) => {
   return withMainApplication(config, (mainApplicationProps) => {
     // Import the plugin class.
-    mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
-      mainApplicationProps.modResults.contents,
-      "import expo.modules.ReactNativeHostWrapper;",
-      "import com.microsoft.codepush.react.CodePush;"
-    );
+    const hostWrapperClass = "import expo.modules.ReactNativeHostWrapper";
+    const codePushClass = "import com.microsoft.codepush.react.CodePush";
+
+    // Expo 50 uses Kotlin and does not require the ;
+    if (mainApplicationProps.modResults.contents.includes(hostWrapperClass)) {
+      mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
+        mainApplicationProps.modResults.contents,
+        hostWrapperClass,
+        codePushClass
+      );
+    }
+
+    // Expo 49 uses Java and requires the ;
+    if (
+      mainApplicationProps.modResults.contents.includes(`${hostWrapperClass};`)
+    ) {
+      mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
+        mainApplicationProps.modResults.contents,
+        `${hostWrapperClass};`,
+        `${codePushClass};`
+      );
+    }
+
+    /**
+     * Override the getJSBundleFile method in order to let
+     * the CodePush runtime determine where to get the JS
+     * bundle location from on each app start
+     */
 
     // The default on Expo 50, which uses kotlin
     const kotlinAnchor = `override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"`;
     if (mainApplicationProps.modResults.contents.includes(kotlinAnchor)) {
-      /**
-       * Override the getJSBundleFile method in order to let
-       * the CodePush runtime determine where to get the JS
-       * bundle location from on each app start
-       */
       const kotlinJSBundleFileOverride = `
       override fun getJSBundleFile(): String? {
         return CodePush.getJSBundleFile()
@@ -36,14 +54,10 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
         kotlinAnchor,
         kotlinJSBundleFileOverride
       );
+      return mainApplicationProps;
     }
 
-    /**
-     * Override the getJSBundleFile method in order to let
-     * the CodePush runtime determine where to get the JS
-     * bundle location from on each app start
-     */
-    const getJSBundleFileOverride = `
+    const javaJSBundleFileOverride = `
       @Override
       protected String getJSBundleFile() {
         return CodePush.getJSBundleFile();
@@ -59,7 +73,7 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         defaultReactNativeAnchor,
-        getJSBundleFileOverride
+        javaJSBundleFileOverride
       );
 
       return mainApplicationProps;
@@ -73,7 +87,7 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         reactNativeHostAnchor,
-        getJSBundleFileOverride
+        javaJSBundleFileOverride
       );
 
       return mainApplicationProps;

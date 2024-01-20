@@ -8,5 +8,11 @@ export function addBelowAnchorIfNotFound(
     return originalString.replace(anchor, `${anchor}\n${stringToBeAdded}`);
   }
 
+  if (!originalString.includes(anchor)) {
+    throw new Error(
+      `The anchor string "${anchor}" was not found in the original string.`
+    );
+  }
+
   return originalString;
 }
