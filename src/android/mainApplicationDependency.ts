@@ -18,6 +18,26 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       "import com.microsoft.codepush.react.CodePush;"
     );
 
+    // The default on Expo 50, which uses kotlin
+    const kotlinAnchor = `override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"`;
+    if (mainApplicationProps.modResults.contents.includes(kotlinAnchor)) {
+      /**
+       * Override the getJSBundleFile method in order to let
+       * the CodePush runtime determine where to get the JS
+       * bundle location from on each app start
+       */
+      const kotlinJSBundleFileOverride = `
+      override fun getJSBundleFile(): String? {
+        return CodePush.getJSBundleFile()
+      }
+      `;
+      mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
+        mainApplicationProps.modResults.contents,
+        kotlinAnchor,
+        kotlinJSBundleFileOverride
+      );
+    }
+
     /**
      * Override the getJSBundleFile method in order to let
      * the CodePush runtime determine where to get the JS
@@ -29,15 +49,16 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
         return CodePush.getJSBundleFile();
       }\n`;
 
-    // This seems to be the default on Expo 49
+    // The default on Expo 49
+    const defaultReactNativeAnchor = "new DefaultReactNativeHost(this) {";
     if (
       mainApplicationProps.modResults.contents.includes(
-        "new DefaultReactNativeHost(this) {"
+        defaultReactNativeAnchor
       )
     ) {
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
-        `new DefaultReactNativeHost(this) {`,
+        defaultReactNativeAnchor,
         getJSBundleFileOverride
       );
 
@@ -45,14 +66,13 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
     }
 
     // This is for compatibility, as it follows the Codepush instructions up-to-spec.
+    const reactNativeHostAnchor = "new ReactNativeHost(this) {";
     if (
-      mainApplicationProps.modResults.contents.includes(
-        "new ReactNativeHost(this) {"
-      )
+      mainApplicationProps.modResults.contents.includes(reactNativeHostAnchor)
     ) {
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
-        `new ReactNativeHost(this) {`,
+        reactNativeHostAnchor,
         getJSBundleFileOverride
       );
 
