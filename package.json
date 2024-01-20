@@ -1,6 +1,6 @@
 {
   "name": "react-native-code-push-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Config plugin to auto configure react-native-code-push on prebuild",
   "main": "build/index.js",
   "types": "build/index.d.ts",
