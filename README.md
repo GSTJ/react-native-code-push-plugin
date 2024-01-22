@@ -3,7 +3,9 @@
 Config plugin to auto-configure [`react-native-code-push`][lib] when the native code is generated (`npx expo prebuild`).
 
 ### ⚠️ Remove Expo updates completely ⚠️
+
 Before installing this package, you need completely remove Expo updates from your project:
+
 - Expo updates configurations
 - Expo updates execution code in your app
 - Expo updates package `npm uninstall -s expo-updates` or `yarn remove expo-updates`
@@ -11,7 +13,7 @@ Before installing this package, you need completely remove Expo updates from you
 
 ### Add the package to your npm dependencies
 
-> Tested against Expo SDK 49
+> Tested against Expo SDK 50
 
 ```
 yarn add react-native-code-push react-native-code-push-plugin

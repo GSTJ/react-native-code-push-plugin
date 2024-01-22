@@ -10,25 +10,47 @@ const addBelowAnchorIfNotFound_1 = require("../utils/addBelowAnchorIfNotFound");
 const withAndroidMainApplicationDependency = (config) => {
     return (0, config_plugins_1.withMainApplication)(config, (mainApplicationProps) => {
         // Import the plugin class.
-        mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, "import expo.modules.ReactNativeHostWrapper;", "import com.microsoft.codepush.react.CodePush;");
+        const hostWrapperClass = "import expo.modules.ReactNativeHostWrapper";
+        const codePushClass = "import com.microsoft.codepush.react.CodePush";
+        // Expo 50 uses Kotlin and does not require the ;
+        if (mainApplicationProps.modResults.contents.includes(hostWrapperClass)) {
+            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, hostWrapperClass, codePushClass);
+        }
+        // Expo 49 uses Java and requires the ;
+        if (mainApplicationProps.modResults.contents.includes(`${hostWrapperClass};`)) {
+            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, `${hostWrapperClass};`, `${codePushClass};`);
+        }
         /**
          * Override the getJSBundleFile method in order to let
          * the CodePush runtime determine where to get the JS
          * bundle location from on each app start
          */
-        const getJSBundleFileOverride = `
+        // The default on Expo 50, which uses kotlin
+        const kotlinAnchor = `override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"`;
+        if (mainApplicationProps.modResults.contents.includes(kotlinAnchor)) {
+            const kotlinJSBundleFileOverride = `
+          override fun getJSBundleFile(): String? {
+            return CodePush.getJSBundleFile()
+          }
+      `;
+            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, kotlinAnchor, kotlinJSBundleFileOverride);
+            return mainApplicationProps;
+        }
+        const javaJSBundleFileOverride = `
       @Override
       protected String getJSBundleFile() {
         return CodePush.getJSBundleFile();
       }\n`;
-        // This seems to be the default on Expo 49
-        if (mainApplicationProps.modResults.contents.includes("new DefaultReactNativeHost(this) {")) {
-            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, `new DefaultReactNativeHost(this) {`, getJSBundleFileOverride);
+        // The default on Expo 49
+        const defaultReactNativeAnchor = "new DefaultReactNativeHost(this) {";
+        if (mainApplicationProps.modResults.contents.includes(defaultReactNativeAnchor)) {
+            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, defaultReactNativeAnchor, javaJSBundleFileOverride);
             return mainApplicationProps;
         }
         // This is for compatibility, as it follows the Codepush instructions up-to-spec.
-        if (mainApplicationProps.modResults.contents.includes("new ReactNativeHost(this) {")) {
-            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, `new ReactNativeHost(this) {`, getJSBundleFileOverride);
+        const reactNativeHostAnchor = "new ReactNativeHost(this) {";
+        if (mainApplicationProps.modResults.contents.includes(reactNativeHostAnchor)) {
+            mainApplicationProps.modResults.contents = (0, addBelowAnchorIfNotFound_1.addBelowAnchorIfNotFound)(mainApplicationProps.modResults.contents, reactNativeHostAnchor, javaJSBundleFileOverride);
             return mainApplicationProps;
         }
         throw new Error("Cannot find a suitable place to insert the CodePush getJSBundleFile code.");
