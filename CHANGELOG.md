@@ -9,3 +9,7 @@
 ### @config-plugins/react-native-codepush 1.0.6
 
 - Expo SDK 50 support
+
+### @config-plugins/react-native-codepush 1.0.6
+
+- Fix SDK 49 build error
