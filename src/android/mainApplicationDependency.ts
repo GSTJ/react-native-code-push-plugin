@@ -27,15 +27,15 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
     }
 
     // Expo 50 uses Kotlin and does not require the ;
-    else if (mainApplicationProps.modResults.contents.includes(hostWrapperClass)) {
+    else if (
+      mainApplicationProps.modResults.contents.includes(hostWrapperClass)
+    ) {
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         hostWrapperClass,
         codePushClass
       );
     }
-
-    
 
     /**
      * Override the getJSBundleFile method in order to let
