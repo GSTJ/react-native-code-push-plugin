@@ -15,15 +15,6 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
     const hostWrapperClass = "import expo.modules.ReactNativeHostWrapper";
     const codePushClass = "import com.microsoft.codepush.react.CodePush";
 
-    // Expo 50 uses Kotlin and does not require the ;
-    if (mainApplicationProps.modResults.contents.includes(hostWrapperClass)) {
-      mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
-        mainApplicationProps.modResults.contents,
-        hostWrapperClass,
-        codePushClass
-      );
-    }
-
     // Expo 49 uses Java and requires the ;
     if (
       mainApplicationProps.modResults.contents.includes(`${hostWrapperClass};`)
@@ -34,6 +25,17 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
         `${codePushClass};`
       );
     }
+
+    // Expo 50 uses Kotlin and does not require the ;
+    else if (mainApplicationProps.modResults.contents.includes(hostWrapperClass)) {
+      mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
+        mainApplicationProps.modResults.contents,
+        hostWrapperClass,
+        codePushClass
+      );
+    }
+
+    
 
     /**
      * Override the getJSBundleFile method in order to let
