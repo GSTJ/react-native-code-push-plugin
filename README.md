@@ -44,8 +44,3 @@ After installing this npm package, add the [config plugin](https://docs.expo.io/
 Next, rebuild your app as described in the ["Adding custom native code"](https://docs.expo.io/workflow/customizing/) guide.
 
 [lib]: https://www.npmjs.com/package/react-native-code-push
-
-### Disclaimer
-
-This was published interim while this PR isn't merged and the plugin isn't published under @config-plugins:
-https://github.com/expo/config-plugins/pull/204
