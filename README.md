@@ -21,6 +21,7 @@ yarn add react-native-code-push react-native-code-push-plugin
 
 After installing this npm package, add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the [`plugins`](https://docs.expo.io/versions/latest/config/app/#plugins) array of your `app.json` or `app.config.js`:
 
+**CodePushServerURL** defaults to https://codepush.appcenter.ms/ 
 ```json
 {
   "expo": {
@@ -29,9 +30,11 @@ After installing this npm package, add the [config plugin](https://docs.expo.io/
         "react-native-code-push-plugin",
         {
           "android": {
+            "CodePushServerURL": "YOUR_CODE_PUSH_SERVER_URL",
             "CodePushDeploymentKey": "YOUR_ANDROID_CODE_PUSH_KEY"
           },
           "ios": {
+            "CodePushServerURL": "YOUR_CODE_PUSH_SERVER_URL",
             "CodePushDeploymentKey": "YOUR_IOS_CODE_PUSH_KEY"
           }
         }
