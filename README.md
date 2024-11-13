@@ -2,14 +2,6 @@
 
 Config plugin to auto-configure [`react-native-code-push`][lib] when the native code is generated (`npx expo prebuild`).
 
-### ⚠️ Remove Expo updates completely ⚠️
-
-Before installing this package, you need completely remove Expo updates from your project:
-
-- Expo updates configurations
-- Expo updates execution code in your app
-- Expo updates package `npm uninstall -s expo-updates` or `yarn remove expo-updates`
-- Any other thing you have done with Expo updates
 
 ### Add the package to your npm dependencies
 
@@ -19,9 +11,18 @@ Before installing this package, you need completely remove Expo updates from you
 yarn add react-native-code-push react-native-code-push-plugin
 ```
 
+### ⚠️ Remove Expo updates completely ⚠️
+
+Before installing this package, you need completely remove Expo updates from your project:
+
+- Expo updates configurations
+- Expo updates execution code in your app
+- Expo updates package `npm uninstall -s expo-updates` or `yarn remove expo-updates`
+- Any other thing you have done with Expo updates
+
 After installing this npm package, add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the [`plugins`](https://docs.expo.io/versions/latest/config/app/#plugins) array of your `app.json` or `app.config.js`:
 
-**CodePushServerURL** is optional if you want to use a self-hosted version of CodePush.
+
 ```json
 {
   "expo": {
@@ -30,11 +31,11 @@ After installing this npm package, add the [config plugin](https://docs.expo.io/
         "react-native-code-push-plugin",
         {
           "android": {
-            "CodePushServerURL": "YOUR_CODE_PUSH_SERVER_URL",
+            "CodePushServerURL": "YOUR_CODE_PUSH_SERVER_URL", // Optional. Pass this value to configure a self-hosted codepush server.
             "CodePushDeploymentKey": "YOUR_ANDROID_CODE_PUSH_KEY"
           },
           "ios": {
-            "CodePushServerURL": "YOUR_CODE_PUSH_SERVER_URL",
+            "CodePushServerURL": "YOUR_CODE_PUSH_SERVER_URL", // Optional. Pass this value to configure a self-hosted codepush server.
             "CodePushDeploymentKey": "YOUR_IOS_CODE_PUSH_KEY"
           }
         }
