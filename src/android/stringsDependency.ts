@@ -28,11 +28,11 @@ export const withAndroidStringsDependency: ConfigPlugin<PluginConfigType> = (
   config,
   props
 ) => {
-  let CodePushServerURL: string = 'https://codepush.appcenter.ms/';
-
-  if (props?.android?.CodePushServerURL) {
-    CodePushServerURL = props?.android?.CodePushServerURL;
-  }
+  // if (!props?.android?.CodePushServerURL) {
+  //   throw new Error(
+  //       "You need to provide the `CodePushServerURL` Android property for the @config-plugins/react-native-code-push plugin to work."
+  //   );
+  // }
 
   if (!props?.android?.CodePushDeploymentKey) {
     throw new Error(
@@ -41,11 +41,13 @@ export const withAndroidStringsDependency: ConfigPlugin<PluginConfigType> = (
   }
 
   return withStringsXml(config, (xmlProps) => {
-    xmlProps.modResults = setStrings(
-        xmlProps.modResults,
-        "CodePushServerURL",
-        CodePushServerURL
-    );
+    if (props?.android?.CodePushServerURL) {
+      xmlProps.modResults = setStrings(
+          xmlProps.modResults,
+          "CodePushServerURL",
+          props?.android?.CodePushServerURL
+      );
+    }
 
     xmlProps.modResults = setStrings(
       xmlProps.modResults,

@@ -10,11 +10,11 @@ export const withIosInfoPlistDependency: ConfigPlugin<PluginConfigType> = (
   config,
   props
 ) => {
-  let CodePushServerURL: string = 'https://codepush.appcenter.ms/';
-
-  if (props?.ios?.CodePushServerURL) {
-    CodePushServerURL = props?.ios?.CodePushServerURL;
-  }
+  // if (!props?.ios?.CodePushServerURL) {
+  //   throw new Error(
+  //       "You need to provide the `CodePushServerURL` IOS property for the @config-plugins/react-native-code-push plugin to work."
+  //   );
+  // }
 
   if (!props?.ios?.CodePushDeploymentKey) {
     throw new Error(
@@ -23,8 +23,10 @@ export const withIosInfoPlistDependency: ConfigPlugin<PluginConfigType> = (
   }
 
   return withInfoPlist(config, (infoPlistProps) => {
-    infoPlistProps.modResults.CodePushServerURL =
-        CodePushServerURL;
+    if (props?.ios?.CodePushServerURL) {
+      infoPlistProps.modResults.CodePushServerURL =
+          props?.ios?.CodePushServerURL;
+    }
 
     infoPlistProps.modResults.CodePushDeploymentKey =
       props.ios.CodePushDeploymentKey;

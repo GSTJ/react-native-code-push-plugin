@@ -3,11 +3,11 @@
  */
 export interface PluginConfigType {
     ios: {
-        CodePushServerURL: string;
+        CodePushServerURL?: string;
         CodePushDeploymentKey: string;
     };
     android: {
-        CodePushServerURL: string;
+        CodePushServerURL?: string;
         CodePushDeploymentKey: string;
         CodePushPublicKey?: string;
     };
