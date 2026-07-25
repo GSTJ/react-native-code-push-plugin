@@ -2,13 +2,16 @@ import { ConfigPlugin, withAppBuildGradle } from "expo/config-plugins";
 
 import { PluginConfigType } from "../pluginConfig";
 import { addBelowAnchorIfNotFound } from "../utils/addBelowAnchorIfNotFound";
+import { codePushGradlePath } from "../utils/codePushGradlePath";
 
-function applyImplementation(appBuildGradle: string) {
-  const codePushImplementation =
-    'apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"';
+export function applyImplementation(appBuildGradle: string) {
+  const codePushImplementation = `apply from: ${codePushGradlePath(
+    "android/codepush.gradle"
+  )}`;
 
-  // Make sure the project does not have the dependency already
-  if (appBuildGradle.includes(codePushImplementation)) {
+  // Make sure the project does not have the dependency already, in any of the
+  // shapes we have generated over time.
+  if (appBuildGradle.includes("codepush.gradle")) {
     return appBuildGradle;
   }
 

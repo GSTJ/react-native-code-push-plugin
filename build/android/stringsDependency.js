@@ -16,7 +16,9 @@ function setStrings(strings, name, value) {
  */
 const withAndroidStringsDependency = (config, props) => {
     // if (!props?.android?.CodePushServerURL) {
-    //     throw new Error("You need to provide the `CodePushServerURL` Android property for the @config-plugins/react-native-code-push plugin to work.");
+    //   throw new Error(
+    //       "You need to provide the `CodePushServerURL` Android property for the @config-plugins/react-native-code-push plugin to work."
+    //   );
     // }
     if (!props?.android?.CodePushDeploymentKey) {
         throw new Error("You need to provide the `CodePushDeploymentKey` Android property for the @config-plugins/react-native-code-push plugin to work.");

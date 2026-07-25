@@ -1,8 +1,9 @@
 import { ConfigPlugin, withSettingsGradle } from "expo/config-plugins";
 
 import { PluginConfigType } from "../pluginConfig";
+import { codePushGradlePath } from "../utils/codePushGradlePath";
 
-function applySettings(gradleSettings: string) {
+export function applySettings(gradleSettings: string) {
   const includeCodePush = "include ':react-native-code-push'";
 
   // Make sure the project does not have the settings already
@@ -12,7 +13,9 @@ function applySettings(gradleSettings: string) {
 
   const codePushSettings = `
 ${includeCodePush}
-project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')`;
+project(':react-native-code-push').projectDir = ${codePushGradlePath(
+    "android/app"
+  )}`;
 
   return gradleSettings + codePushSettings;
 }
