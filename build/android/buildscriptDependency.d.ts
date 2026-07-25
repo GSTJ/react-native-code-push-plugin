@@ -1,5 +1,6 @@
 import { ConfigPlugin } from "expo/config-plugins";
 import { PluginConfigType } from "../pluginConfig";
+export declare function applyImplementation(appBuildGradle: string): string;
 /**
  * Update `<project>/build.gradle` by adding the codepush.gradle file
  * as an additional build task definition underneath react.gradle

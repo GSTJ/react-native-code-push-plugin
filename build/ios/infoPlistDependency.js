@@ -8,7 +8,9 @@ const config_plugins_1 = require("expo/config-plugins");
  */
 const withIosInfoPlistDependency = (config, props) => {
     // if (!props?.ios?.CodePushServerURL) {
-    //     throw new Error("You need to provide the `CodePushServerURL` IOS property for the @config-plugins/react-native-code-push plugin to work.");
+    //   throw new Error(
+    //       "You need to provide the `CodePushServerURL` IOS property for the @config-plugins/react-native-code-push plugin to work."
+    //   );
     // }
     if (!props?.ios?.CodePushDeploymentKey) {
         throw new Error("You need to provide the `CodePushDeploymentKey` IOS property for the @config-plugins/react-native-code-push plugin to work.");

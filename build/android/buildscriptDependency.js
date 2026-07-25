@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withAndroidBuildscriptDependency = void 0;
+exports.withAndroidBuildscriptDependency = exports.applyImplementation = void 0;
 const config_plugins_1 = require("expo/config-plugins");
 const addBelowAnchorIfNotFound_1 = require("../utils/addBelowAnchorIfNotFound");
+const codePushGradlePath_1 = require("../utils/codePushGradlePath");
 function applyImplementation(appBuildGradle) {
-    const codePushImplementation = 'apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"';
-    // Make sure the project does not have the dependency already
-    if (appBuildGradle.includes(codePushImplementation)) {
+    const codePushImplementation = `apply from: ${(0, codePushGradlePath_1.codePushGradlePath)("android/codepush.gradle")}`;
+    // Make sure the project does not have the dependency already, in any of the
+    // shapes we have generated over time.
+    if (appBuildGradle.includes("codepush.gradle")) {
         return appBuildGradle;
     }
     // The default on Expo 50
@@ -31,6 +33,7 @@ function applyImplementation(appBuildGradle) {
     }
     throw new Error("Cannot find a suitable place to insert the CodePush buildscript dependency.");
 }
+exports.applyImplementation = applyImplementation;
 /**
  * Update `<project>/build.gradle` by adding the codepush.gradle file
  * as an additional build task definition underneath react.gradle
