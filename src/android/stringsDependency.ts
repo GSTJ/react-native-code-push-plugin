@@ -17,7 +17,7 @@ function setStrings(strings: ResourceXML, name: string, value: string) {
       // <string moduleConfig="true" name="">value</string>
       { $: xmlProperties, _: value },
     ],
-    strings
+    strings,
   );
 }
 
@@ -26,7 +26,7 @@ function setStrings(strings: ResourceXML, name: string, value: string) {
  */
 export const withAndroidStringsDependency: ConfigPlugin<PluginConfigType> = (
   config,
-  props
+  props,
 ) => {
   // if (!props?.android?.CodePushServerURL) {
   //   throw new Error(
@@ -36,23 +36,23 @@ export const withAndroidStringsDependency: ConfigPlugin<PluginConfigType> = (
 
   if (!props?.android?.CodePushDeploymentKey) {
     throw new Error(
-      "You need to provide the `CodePushDeploymentKey` Android property for the @config-plugins/react-native-code-push plugin to work."
+      "You need to provide the `CodePushDeploymentKey` Android property for the @config-plugins/react-native-code-push plugin to work.",
     );
   }
 
   return withStringsXml(config, (xmlProps) => {
     if (props?.android?.CodePushServerURL) {
       xmlProps.modResults = setStrings(
-          xmlProps.modResults,
-          "CodePushServerURL",
-          props?.android?.CodePushServerURL
+        xmlProps.modResults,
+        "CodePushServerURL",
+        props?.android?.CodePushServerURL,
       );
     }
 
     xmlProps.modResults = setStrings(
       xmlProps.modResults,
       "CodePushDeploymentKey",
-      props.android.CodePushDeploymentKey
+      props.android.CodePushDeploymentKey,
     );
 
     /** This prop is optional */
@@ -60,7 +60,7 @@ export const withAndroidStringsDependency: ConfigPlugin<PluginConfigType> = (
       xmlProps.modResults = setStrings(
         xmlProps.modResults,
         "CodePushPublicKey",
-        props.android.CodePushPublicKey
+        props.android.CodePushPublicKey,
       );
     }
 

@@ -14,6 +14,9 @@
     "build",
     "app.plugin.js"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
@@ -21,6 +24,7 @@
     "test": "expo-module test",
     "prepare": "expo-module prepare",
     "prepublishOnly": "expo-module prepublishOnly",
+    "release": "release-it",
     "expo-module": "expo-module"
   },
   "keywords": [
@@ -33,9 +37,83 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
+    "@release-it/conventional-changelog": "^12.0.0",
+    "eslint": "^8.57.1",
     "expo": ">=49.0.0",
     "expo-module-scripts": "^3.0.3",
-    "jest": "^29"
+    "jest": "^29",
+    "prettier": "^3.9.6",
+    "release-it": "^21.0.0"
+  },
+  "release-it": {
+    "git": {
+      "requireBranch": "master",
+      "commitMessage": "chore(release): v${version} [skip ci]",
+      "tagName": "v${version}",
+      "tagAnnotation": "v${version}\n\n${changelog}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}"
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog",
+        "preset": {
+          "name": "conventionalcommits",
+          "types": [
+            {
+              "type": "feat",
+              "section": "Features"
+            },
+            {
+              "type": "fix",
+              "section": "Bug Fixes"
+            },
+            {
+              "type": "perf",
+              "section": "Performance"
+            },
+            {
+              "type": "refactor",
+              "section": "Code Refactoring"
+            },
+            {
+              "type": "docs",
+              "section": "Documentation"
+            },
+            {
+              "type": "build",
+              "section": "Build System"
+            },
+            {
+              "type": "ci",
+              "section": "Continuous Integration"
+            },
+            {
+              "type": "chore",
+              "section": "Chores"
+            },
+            {
+              "type": "revert",
+              "section": "Reverts"
+            },
+            {
+              "type": "test",
+              "hidden": true
+            },
+            {
+              "type": "style",
+              "hidden": true
+            }
+          ]
+        }
+      }
+    }
   },
   "resolutions": {
     "**/@expo/plist/@xmldom/xmldom": "0.8.13",

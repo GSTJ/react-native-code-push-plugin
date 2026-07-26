@@ -17,7 +17,7 @@ describe("android gradle paths", () => {
     const result = applyImplementation(appBuildGradle);
 
     expect(result).toContain(
-      "require.resolve('react-native-code-push/package.json')"
+      "require.resolve('react-native-code-push/package.json')",
     );
     expect(result).toContain('"android/codepush.gradle"');
     expect(result).not.toContain(hardcodedPath);
@@ -40,7 +40,7 @@ describe("android gradle paths", () => {
 
     expect(result).toContain("include ':react-native-code-push'");
     expect(result).toContain(
-      "require.resolve('react-native-code-push/package.json')"
+      "require.resolve('react-native-code-push/package.json')",
     );
     expect(result).not.toContain(hardcodedPath);
   });

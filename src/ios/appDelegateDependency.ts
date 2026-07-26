@@ -10,19 +10,19 @@ import { replaceIfNotFound } from "../utils/replaceIfNotFound";
  */
 export const withIosAppDelegateDependency: ConfigPlugin<PluginConfigType> = (
   config,
-  _props
+  _props,
 ) => {
   return withAppDelegate(config, (appDelegateProps) => {
     appDelegateProps.modResults.contents = addBelowAnchorIfNotFound(
       appDelegateProps.modResults.contents,
       `#import "AppDelegate.h"`,
-      `#import <CodePush/CodePush.h>`
+      `#import <CodePush/CodePush.h>`,
     );
 
     appDelegateProps.modResults.contents = replaceIfNotFound(
       appDelegateProps.modResults.contents,
       `return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];`,
-      `return [CodePush bundleURL];`
+      `return [CodePush bundleURL];`,
     );
 
     return appDelegateProps;

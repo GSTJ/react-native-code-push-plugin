@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: "Version increment. Leave empty to infer it from the conventional commits since the last tag."
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - patch
+          - minor
+          - major
+      dry-run:
+        description: "Run release-it without publishing, pushing or tagging."
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # conventional-changelog needs the tags and every commit since the
+          # last one to work out the bump and the changelog entries.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: yarn
+          registry-url: https://registry.npmjs.org/
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn lint --max-warnings 0
+
+      - run: yarn test
+
+      - run: yarn build
+
+      # release-it pushes the version commit and the tag back to master, and
+      # actions/checkout leaves the branch without an upstream to push to.
+      - run: git branch --set-upstream-to=origin/${{ github.ref_name }}
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          INCREMENT: ${{ inputs.increment }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          git config user.email "gabrielstaveira@gmail.com"
+          git config user.name "Gabriel Taveira"
+
+          args="--ci"
+          if [ -n "$INCREMENT" ]; then
+            args="$args --increment=$INCREMENT"
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            args="$args --dry-run"
+          fi
+
+          yarn release $args

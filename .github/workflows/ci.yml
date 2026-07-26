@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: yarn
+
+      # `prepare` runs `expo-module prepare`, so this already builds once.
+      - run: yarn install --frozen-lockfile
+
+      # universe sets most of its rules to `warn`, so without this the step
+      # passes no matter what eslint finds.
+      - run: yarn lint --max-warnings 0
+
+      - run: yarn test
+
+      - run: yarn build
+
+      # `build/` is generated, so the only way to know the published tarball
+      # isn't empty is to pack one.
+      - name: Check the tarball contents
+        run: npm pack --dry-run

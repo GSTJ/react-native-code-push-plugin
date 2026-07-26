@@ -6,7 +6,7 @@ import { codePushGradlePath } from "../utils/codePushGradlePath";
 
 export function applyImplementation(appBuildGradle: string) {
   const codePushImplementation = `apply from: ${codePushGradlePath(
-    "android/codepush.gradle"
+    "android/codepush.gradle",
   )}`;
 
   // Make sure the project does not have the dependency already, in any of the
@@ -21,7 +21,7 @@ export function applyImplementation(appBuildGradle: string) {
     return addBelowAnchorIfNotFound(
       appBuildGradle,
       reactNative73Include,
-      codePushImplementation
+      codePushImplementation,
     );
   }
 
@@ -31,7 +31,7 @@ export function applyImplementation(appBuildGradle: string) {
     return addBelowAnchorIfNotFound(
       appBuildGradle,
       reactNative71Include,
-      codePushImplementation
+      codePushImplementation,
     );
   }
 
@@ -41,7 +41,7 @@ export function applyImplementation(appBuildGradle: string) {
     return addBelowAnchorIfNotFound(
       appBuildGradle,
       reactNativeFileClassGradleInclude,
-      codePushImplementation
+      codePushImplementation,
     );
   }
 
@@ -51,12 +51,12 @@ export function applyImplementation(appBuildGradle: string) {
     return addBelowAnchorIfNotFound(
       appBuildGradle,
       reactNativeRawGradleInclude,
-      codePushImplementation
+      codePushImplementation,
     );
   }
 
   throw new Error(
-    "Cannot find a suitable place to insert the CodePush buildscript dependency."
+    "Cannot find a suitable place to insert the CodePush buildscript dependency.",
   );
 }
 
@@ -70,7 +70,7 @@ export const withAndroidBuildscriptDependency: ConfigPlugin<
 > = (config) => {
   return withAppBuildGradle(config, (buildGradleProps) => {
     buildGradleProps.modResults.contents = applyImplementation(
-      buildGradleProps.modResults.contents
+      buildGradleProps.modResults.contents,
     );
 
     return buildGradleProps;
