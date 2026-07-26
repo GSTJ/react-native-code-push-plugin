@@ -41,7 +41,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - run: yarn lint
+      - run: yarn lint --max-warnings 0
 
       - run: yarn test
 

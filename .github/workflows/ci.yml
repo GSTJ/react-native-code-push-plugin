@@ -27,7 +27,9 @@ jobs:
       # `prepare` runs `expo-module prepare`, so this already builds once.
       - run: yarn install --frozen-lockfile
 
-      - run: yarn lint
+      # universe sets most of its rules to `warn`, so without this the step
+      # passes no matter what eslint finds.
+      - run: yarn lint --max-warnings 0
 
       - run: yarn test
 
