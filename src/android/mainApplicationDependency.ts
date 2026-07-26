@@ -22,7 +22,7 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         `${hostWrapperClass};`,
-        `${codePushClass};`
+        `${codePushClass};`,
       );
     }
 
@@ -33,7 +33,7 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         hostWrapperClass,
-        codePushClass
+        codePushClass,
       );
     }
 
@@ -54,7 +54,7 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         kotlinAnchor,
-        kotlinJSBundleFileOverride
+        kotlinJSBundleFileOverride,
       );
       return mainApplicationProps;
     }
@@ -69,13 +69,13 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
     const defaultReactNativeAnchor = "new DefaultReactNativeHost(this) {";
     if (
       mainApplicationProps.modResults.contents.includes(
-        defaultReactNativeAnchor
+        defaultReactNativeAnchor,
       )
     ) {
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         defaultReactNativeAnchor,
-        javaJSBundleFileOverride
+        javaJSBundleFileOverride,
       );
 
       return mainApplicationProps;
@@ -89,14 +89,14 @@ export const withAndroidMainApplicationDependency: ConfigPlugin<
       mainApplicationProps.modResults.contents = addBelowAnchorIfNotFound(
         mainApplicationProps.modResults.contents,
         reactNativeHostAnchor,
-        javaJSBundleFileOverride
+        javaJSBundleFileOverride,
       );
 
       return mainApplicationProps;
     }
 
     throw new Error(
-      "Cannot find a suitable place to insert the CodePush getJSBundleFile code."
+      "Cannot find a suitable place to insert the CodePush getJSBundleFile code.",
     );
   });
 };
