@@ -37,5 +37,10 @@
     "expo-module-scripts": "^3.0.3",
     "jest": "^29"
   },
+  "resolutions": {
+    "**/@expo/plist/@xmldom/xmldom": "0.8.13",
+    "**/@typescript-eslint/typescript-estree/minimatch": "9.0.7",
+    "**/xcode/uuid": "11.1.1"
+  },
   "upstreamPackage": "react-native-code-push"
 }
