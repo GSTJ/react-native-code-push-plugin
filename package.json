@@ -50,7 +50,10 @@
       "requireBranch": "master",
       "commitMessage": "chore(release): v${version} [skip ci]",
       "tagName": "v${version}",
-      "tagAnnotation": "v${version}\n\n${changelog}"
+      "tagAnnotation": "v${version}\n\n${changelog}",
+      "tagArgs": [
+        "--cleanup=verbatim"
+      ]
     },
     "npm": {
       "publish": true
