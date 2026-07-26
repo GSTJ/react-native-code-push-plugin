@@ -33,11 +33,14 @@ jobs:
           # last one to work out the bump and the changelog entries.
           fetch-depth: 0
 
+      # No `registry-url` here on purpose: it writes an `.npmrc` holding a
+      # literal `${NODE_AUTH_TOKEN}`, and the `cache: yarn` probe then runs
+      # `yarn cache dir`, which dies on "Failed to replace env in config".
+      # The Release step below writes the token itself.
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: yarn
-          registry-url: https://registry.npmjs.org/
 
       - run: yarn install --frozen-lockfile
 
@@ -54,12 +57,13 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           INCREMENT: ${{ inputs.increment }}
           DRY_RUN: ${{ inputs.dry-run }}
         run: |
           git config user.email "gabrielstaveira@gmail.com"
           git config user.name "Gabriel Taveira"
+          npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
 
           args="--ci"
           if [ -n "$INCREMENT" ]; then
