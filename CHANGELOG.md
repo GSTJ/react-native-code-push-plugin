@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.10](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.9...v1.0.10) (2026-07-27)
+
+### Bug Fixes
+
+* **release:** keep the changelog headings in the tag message ([0c6c8c1](https://github.com/GSTJ/react-native-code-push-plugin/commit/0c6c8c1b740858654b4ada1a062874be9302db22))
+
+### Continuous Integration
+
+* land release bumps through a PR instead of pushing to master ([#19](https://github.com/GSTJ/react-native-code-push-plugin/issues/19)) ([a7016d2](https://github.com/GSTJ/react-native-code-push-plugin/commit/a7016d264e5a4b14b1bdb8b3e9fe788e1357b60f))
+
 ## [1.0.9](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.8...v1.0.9) (2026-07-26)
 
 ### Bug Fixes
