@@ -25,8 +25,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "expo-module clean",
-    "lint": "oxlint --report-unused-disable-directives",
-    "lint:fix": "oxlint --report-unused-disable-directives --fix",
+    "lint": "oxlint --report-unused-disable-directives --deny-warnings",
+    "lint:fix": "oxlint --report-unused-disable-directives --deny-warnings --fix",
     "format": "oxfmt --check .",
     "format:fix": "oxfmt .",
     "typecheck": "tsc --noEmit",
