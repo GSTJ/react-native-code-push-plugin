@@ -8,6 +8,12 @@
     "outDir": "./build",
     "rootDir": "./src",
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    // magic-tsconfig's base turns `incremental` on, and the build info file
+    // lands next to this config rather than inside `outDir`: `clean` (or any
+    // `rm -rf build`) would leave it behind, and the next build would emit
+    // nothing because it still believes the output is up to date. A publishable
+    // artifact is not worth that risk over a one-second compile.
+    "incremental": false
   }
 }
