@@ -3,74 +3,55 @@ import type { ConfigPlugin } from "expo/config-plugins";
 
 import { withAppBuildGradle } from "expo/config-plugins";
 
-import { addBelowAnchorIfNotFound } from "../utils/add-below-anchor-if-not-found";
 import { codePushGradlePath } from "../utils/code-push-gradle-path";
 
+/**
+ * Appends `apply from: <codepush.gradle>` to the app module's build.gradle.
+ *
+ * This used to hunt for the `apply from: ... native_modules.gradle` line and
+ * insert below it. That line was never the point: it just happened to be the
+ * last statement in the RN 0.71-0.73 template. RN 0.75 folded autolinking into
+ * `autolinkLibrariesWithApp()` inside the `react { }` block, so by Expo SDK 56
+ * there is no `apply from:` in the file at all and the search threw.
+ *
+ * The end of the file is where the apply has to go regardless of template.
+ * `codepush.gradle` reads the `react` extension and iterates
+ * `android.buildTypes` while it is being applied, so it has to run after both
+ * blocks have been configured. Nothing in it depends on autolinking, so running
+ * after that is fine too.
+ */
 export function applyImplementation(appBuildGradle: string) {
-  const codePushImplementation = `apply from: ${codePushGradlePath(
-    "android/codepush.gradle",
-  )}`;
-
-  // Make sure the project does not have the dependency already, in any of the
-  // shapes we have generated over time.
+  // Every shape this plugin has ever written names the file, so one check
+  // covers projects prebuilt by an older version.
   if (appBuildGradle.includes("codepush.gradle")) {
     return appBuildGradle;
   }
 
-  // The default on Expo 50
-  const reactNative73Include = `apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), "../native_modules.gradle");`;
-  if (appBuildGradle.includes(reactNative73Include)) {
-    return addBelowAnchorIfNotFound(
-      appBuildGradle,
-      reactNative73Include,
-      codePushImplementation,
-    );
-  }
+  const codePushImplementation = `apply from: ${codePushGradlePath(
+    "android/codepush.gradle",
+  )}`;
 
-  // Seems to be the default on Expo 49
-  const reactNative71Include = `apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute(null, rootDir).text.trim(), "../native_modules.gradle");`;
-  if (appBuildGradle.includes(reactNative71Include)) {
-    return addBelowAnchorIfNotFound(
-      appBuildGradle,
-      reactNative71Include,
-      codePushImplementation,
-    );
-  }
-
-  // For compatibility
-  const reactNativeFileClassGradleInclude = `'apply from: new File(reactNativeRoot, "react.gradle")`;
-  if (appBuildGradle.includes(reactNativeFileClassGradleInclude)) {
-    return addBelowAnchorIfNotFound(
-      appBuildGradle,
-      reactNativeFileClassGradleInclude,
-      codePushImplementation,
-    );
-  }
-
-  // For compatibility
-  const reactNativeRawGradleInclude = `apply from: "../../node_modules/react-native/react.gradle"`;
-  if (appBuildGradle.includes(reactNativeRawGradleInclude)) {
-    return addBelowAnchorIfNotFound(
-      appBuildGradle,
-      reactNativeRawGradleInclude,
-      codePushImplementation,
-    );
-  }
-
-  throw new Error(
-    "Cannot find a suitable place to insert the CodePush buildscript dependency.",
-  );
+  return `${appBuildGradle.trimEnd()}\n\n${codePushImplementation}\n`;
 }
 
 /**
- * Update `<project>/build.gradle` by adding the codepush.gradle file
- * as an additional build task definition underneath react.gradle
+ * Update `<project>/android/app/build.gradle` by applying the codepush.gradle
+ * file, which registers the bundle-hash tasks CodePush needs at build time.
  * https://github.com/microsoft/react-native-code-push/blob/master/docs/setup-android.md#plugin-installation-and-configuration-for-react-nactive-060-version-and-above-android
  */
 export const withAndroidBuildscriptDependency: ConfigPlugin<
   PluginConfigType
 > = (config) => {
   return withAppBuildGradle(config, (buildGradleProps) => {
+    // `apply from:` is Groovy. Expo's template is Groovy, but a project that
+    // switched to the Kotlin DSL would get a build file that no longer parses,
+    // so say what happened instead of writing it.
+    if (buildGradleProps.modResults.language !== "groovy") {
+      throw new Error(
+        `Cannot apply codepush.gradle: android/app/build.gradle is ${buildGradleProps.modResults.language}, and this plugin only writes the Groovy syntax Expo's template uses.`,
+      );
+    }
+
     buildGradleProps.modResults.contents = applyImplementation(
       buildGradleProps.modResults.contents,
     );
