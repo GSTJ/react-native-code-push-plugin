@@ -1,0 +1,48 @@
+PROOF: the kebab-case rename, and that the shared config is actually loaded
+
+==============================================================
+$ pnpm exec magic-kebab --dry-run --strict   (on chore/magic-tooling)
+==============================================================
+Plan — 0 renames, 0 specifier rewrites, 0 skipped, 0 conflicts, 0 needing review
+  repo:      /private/tmp/claude-501/-Users-jarvis-jarvis-lab/53f769e9-39ae-4cf6-9d1e-67157f66798d/scratchpad/codepush-magic
+  detection: oxlint
+  tsconfig:  (no tsconfig with `paths` found — ALIAS IMPORTS WILL NOT BE REWRITTEN. In a monorepo this is usually wrong; pass --tsconfig.)
+
+Nothing to rename.
+--> exit 0   (0 renames left, nothing under NEEDS REVIEW)
+
+==============================================================
+the 11 renames git recorded, all detected as renames
+==============================================================
+R093	src/android/__tests__/gradlePaths.test.ts	src/android/__tests__/gradle-paths.test.ts
+R089	src/android/buildscriptDependency.ts	src/android/buildscript-dependency.ts
+R092	src/android/mainApplicationDependency.ts	src/android/main-application-dependency.ts
+R080	src/android/settingsDependency.ts	src/android/settings-dependency.ts
+R083	src/android/stringsDependency.ts	src/android/strings-dependency.ts
+R071	src/ios/appDelegateDependency.ts	src/ios/app-delegate-dependency.ts
+R085	src/ios/infoPlistDependency.ts	src/ios/info-plist-dependency.ts
+R086	src/pluginConfig.ts	src/plugin-config.ts
+R100	src/utils/addBelowAnchorIfNotFound.ts	src/utils/add-below-anchor-if-not-found.ts
+R100	src/utils/codePushGradlePath.ts	src/utils/code-push-gradle-path.ts
+R100	src/utils/replaceIfNotFound.ts	src/utils/replace-if-not-found.ts
+
+==============================================================
+nothing outside src/ referenced any of those names
+==============================================================
+$ git grep -nE '<old basenames>' origin/master -- ':!src'
+(no matches: app.plugin.js, package.json main/types and jest.config.js name none of them)
+
+==============================================================
+the preset's ignorePatterns really are loaded
+==============================================================
+The magic README warns that consuming a preset through oxlint's `extends`
+silently drops `ignorePatterns`, and that `--print-config` cannot be trusted
+to tell you. So: lint a generated file directly and see if it is skipped.
+
+$ ls build/index.js && oxlint build/index.js
+build/index.js
+No files found to lint. Please check your paths and ignore patterns.
+--> build/ is ignored, so oxlint reports nothing for a file that exists.
+
+$ oxlint --report-unused-disable-directives --deny-warnings   (whole repo)
+--> exit 0

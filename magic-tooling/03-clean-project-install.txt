@@ -1,0 +1,109 @@
+PROOF: the packed tarball installs into a clean Expo project and all six mods run
+
+The README says "Tested against Expo SDK 50". Two projects were built from scratch:
+
+  Expo SDK 57.0.8 — prebuild FAILS, on master and on chore/magic-tooling alike:
+  "Cannot find a suitable place to insert the CodePush buildscript dependency".
+  SDK 57's android/app/build.gradle carries no `apply from:` line at all, so none
+  of the four anchors the plugin searches for exists. Pre-existing upstream drift,
+  identical before and after, not this PR's to fix.
+
+  Expo SDK 50.0.21 — prebuild SUCCEEDS. Both tarballs were built with `npm pack`,
+  installed from a file: path into the same project, and prebuilt with
+  `npx expo prebuild --clean`. Results below.
+
+==============================================================
+chore/magic-tooling tarball, Expo SDK 50
+==============================================================
+mod 1/6  withAndroidBuildscriptDependency -> android/app/build.gradle
+  [PASS] apply from: codepush.gradle
+  [PASS] path resolved by node, not hardcoded
+  [PASS] no hardcoded node_modules path
+mod 2/6  withAndroidSettingsDependency -> android/settings.gradle
+  [PASS] include ':react-native-code-push'
+  [PASS] projectDir resolved by node
+mod 3/6  withAndroidStringsDependency -> android/app/src/main/res/values/strings.xml
+  [PASS] CodePushDeploymentKey value
+  [PASS] CodePushServerURL name
+  [PASS] CodePushPublicKey value
+mod 4/6  withAndroidMainApplicationDependency -> android/app/src/main/java/com/example/codepushcheck50/MainApplication.kt
+  [PASS] CodePush class import
+  [PASS] getJSBundleFile override
+mod 5/6  withIosInfoPlistDependency -> ios/codepushcheck50/Info.plist
+  [PASS] CodePushDeploymentKey value
+  [PASS] CodePushServerURL value
+mod 6/6  withIosAppDelegateDependency -> ios/codepushcheck50/AppDelegate.mm
+  [PASS] CodePush header import
+  [PASS] bundleURL swapped to CodePush
+
+RESULT: 14 passed, 0 failed
+
+==============================================================
+master tarball, same project, same command
+==============================================================
+mod 1/6  withAndroidBuildscriptDependency -> android/app/build.gradle
+  [PASS] apply from: codepush.gradle
+  [PASS] path resolved by node, not hardcoded
+  [PASS] no hardcoded node_modules path
+mod 2/6  withAndroidSettingsDependency -> android/settings.gradle
+  [PASS] include ':react-native-code-push'
+  [PASS] projectDir resolved by node
+mod 3/6  withAndroidStringsDependency -> android/app/src/main/res/values/strings.xml
+  [PASS] CodePushDeploymentKey value
+  [PASS] CodePushServerURL name
+  [PASS] CodePushPublicKey value
+mod 4/6  withAndroidMainApplicationDependency -> android/app/src/main/java/com/example/codepushcheck50/MainApplication.kt
+  [PASS] CodePush class import
+  [PASS] getJSBundleFile override
+mod 5/6  withIosInfoPlistDependency -> ios/codepushcheck50/Info.plist
+  [PASS] CodePushDeploymentKey value
+  [PASS] CodePushServerURL value
+mod 6/6  withIosAppDelegateDependency -> ios/codepushcheck50/AppDelegate.mm
+  [PASS] CodePush header import
+  [PASS] bundleURL swapped to CodePush
+
+RESULT: 14 passed, 0 failed
+
+==============================================================
+$ diff -r native-master native-pr24
+  (every native file the six mods touch, from both runs)
+==============================================================
+(no output above: byte-identical)
+
+==============================================================
+what the mods wrote, from the chore/magic-tooling run
+==============================================================
+--- android/app/build.gradle
+176:apply from: new File(new File(["node", "--print", "require.resolve('react-native-code-push/package.json')"].execute(null, rootDir).text.trim()).parentFile, "android/codepush.gradle")
+--- android/settings.gradle
+20:include ':react-native-code-push'
+21:project(':react-native-code-push').projectDir = new File(new File(["node", "--print", "require.resolve('react-native-code-push/package.json')"].execute(null, rootDir).text.trim()).parentFile, "android/app")
+--- android/app/src/main/res/values/strings.xml
+3:  <string name="CodePushServerURL" moduleConfig="true">https://codepush.example.com/</string>
+4:  <string name="CodePushDeploymentKey" moduleConfig="true">ANDROID-DEPLOYMENT-KEY</string>
+5:  <string name="CodePushPublicKey" moduleConfig="true">ANDROID-PUBLIC-KEY</string>
+--- MainApplication.kt
+21:import com.microsoft.codepush.react.CodePush
+37:            return CodePush.getJSBundleFile()
+--- ios/Info.plist
+36:    <key>CodePushDeploymentKey</key>
+37-    <string>IOS-DEPLOYMENT-KEY</string>
+38:    <key>CodePushServerURL</key>
+39-    <string>https://codepush.example.com/</string>
+--- ios/AppDelegate.mm
+2:#import <CodePush/CodePush.h>
+30:  return [CodePush bundleURL];
+
+==============================================================
+the module filenames inside the installed build/ did change
+==============================================================
+$ ls node_modules/react-native-code-push-plugin/build/utils   (chore/magic-tooling)
+add-below-anchor-if-not-found.d.ts
+add-below-anchor-if-not-found.js
+add-below-anchor-if-not-found.js.map
+code-push-gradle-path.d.ts
+code-push-gradle-path.js
+code-push-gradle-path.js.map
+replace-if-not-found.d.ts
+replace-if-not-found.js
+replace-if-not-found.js.map

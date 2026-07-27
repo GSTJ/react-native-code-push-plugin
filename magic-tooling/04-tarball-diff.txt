@@ -1,0 +1,143 @@
+PROOF: what the published tarball gains and loses
+
+`npm pack --dry-run` on master and on chore/magic-tooling. Same 36 files.
+30 of them are renamed; the four that keep their path are compared byte for byte
+at the bottom.
+
+master:            36 files, 33692 bytes unpacked
+chore/magic-tooling: 36 files, 34245 bytes unpacked
+
+RENAMED (30):
+  build/android/buildscriptDependency.d.ts
+    -> build/android/buildscript-dependency.d.ts
+  build/android/buildscriptDependency.js
+    -> build/android/buildscript-dependency.js
+  build/android/buildscriptDependency.js.map
+    -> build/android/buildscript-dependency.js.map
+  build/android/mainApplicationDependency.d.ts
+    -> build/android/main-application-dependency.d.ts
+  build/android/mainApplicationDependency.js
+    -> build/android/main-application-dependency.js
+  build/android/mainApplicationDependency.js.map
+    -> build/android/main-application-dependency.js.map
+  build/android/settingsDependency.d.ts
+    -> build/android/settings-dependency.d.ts
+  build/android/settingsDependency.js
+    -> build/android/settings-dependency.js
+  build/android/settingsDependency.js.map
+    -> build/android/settings-dependency.js.map
+  build/android/stringsDependency.d.ts
+    -> build/android/strings-dependency.d.ts
+  build/android/stringsDependency.js
+    -> build/android/strings-dependency.js
+  build/android/stringsDependency.js.map
+    -> build/android/strings-dependency.js.map
+  build/ios/appDelegateDependency.d.ts
+    -> build/ios/app-delegate-dependency.d.ts
+  build/ios/appDelegateDependency.js
+    -> build/ios/app-delegate-dependency.js
+  build/ios/appDelegateDependency.js.map
+    -> build/ios/app-delegate-dependency.js.map
+  build/ios/infoPlistDependency.d.ts
+    -> build/ios/info-plist-dependency.d.ts
+  build/ios/infoPlistDependency.js
+    -> build/ios/info-plist-dependency.js
+  build/ios/infoPlistDependency.js.map
+    -> build/ios/info-plist-dependency.js.map
+  build/pluginConfig.d.ts
+    -> build/plugin-config.d.ts
+  build/pluginConfig.js
+    -> build/plugin-config.js
+  build/pluginConfig.js.map
+    -> build/plugin-config.js.map
+  build/utils/addBelowAnchorIfNotFound.d.ts
+    -> build/utils/add-below-anchor-if-not-found.d.ts
+  build/utils/addBelowAnchorIfNotFound.js
+    -> build/utils/add-below-anchor-if-not-found.js
+  build/utils/addBelowAnchorIfNotFound.js.map
+    -> build/utils/add-below-anchor-if-not-found.js.map
+  build/utils/codePushGradlePath.d.ts
+    -> build/utils/code-push-gradle-path.d.ts
+  build/utils/codePushGradlePath.js
+    -> build/utils/code-push-gradle-path.js
+  build/utils/codePushGradlePath.js.map
+    -> build/utils/code-push-gradle-path.js.map
+  build/utils/replaceIfNotFound.d.ts
+    -> build/utils/replace-if-not-found.d.ts
+  build/utils/replaceIfNotFound.js
+    -> build/utils/replace-if-not-found.js
+  build/utils/replaceIfNotFound.js.map
+    -> build/utils/replace-if-not-found.js.map
+
+SAME PATH (6):
+  README.md   2398 -> 2397 bytes
+  app.plugin.js   37 -> 37 bytes
+  build/index.d.ts   184 -> 195 bytes
+  build/index.js   1670 -> 1697 bytes
+  build/index.js.map   937 -> 937 bytes
+  package.json   1417 -> 1675 bytes
+
+==============================================================
+the four unrenamed files, diffed
+==============================================================
+--- package.json: keys sorted by oxfmt, devDependencies swapped, scripts added
+--- README.md: one blank line removed by oxfmt
+--- app.plugin.js: unchanged
+
+$ diff master:build/index.d.ts  magic:build/index.d.ts
+--- /private/tmp/claude-501/-Users-jarvis-jarvis-lab/53f769e9-39ae-4cf6-9d1e-67157f66798d/scratchpad/mastercheck/build/index.d.ts	2026-07-27 10:12:31
++++ build/index.d.ts	2026-07-27 10:12:28
+@@ -1,4 +1,4 @@
+-import { ConfigPlugin } from "expo/config-plugins";
+-import { PluginConfigType } from "./pluginConfig";
++import type { PluginConfigType } from "./plugin-config";
++import type { ConfigPlugin } from "expo/config-plugins";
+ declare const _default: ConfigPlugin<PluginConfigType>;
+ export default _default;
+
+$ diff master:build/index.js  magic:build/index.js
+--- /private/tmp/claude-501/-Users-jarvis-jarvis-lab/53f769e9-39ae-4cf6-9d1e-67157f66798d/scratchpad/mastercheck/build/index.js	2026-07-27 10:12:31
++++ build/index.js	2026-07-27 10:12:28
+@@ -1,12 +1,12 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const config_plugins_1 = require("expo/config-plugins");
+-const buildscriptDependency_1 = require("./android/buildscriptDependency");
+-const mainApplicationDependency_1 = require("./android/mainApplicationDependency");
+-const settingsDependency_1 = require("./android/settingsDependency");
+-const stringsDependency_1 = require("./android/stringsDependency");
+-const appDelegateDependency_1 = require("./ios/appDelegateDependency");
+-const infoPlistDependency_1 = require("./ios/infoPlistDependency");
++const buildscript_dependency_1 = require("./android/buildscript-dependency");
++const main_application_dependency_1 = require("./android/main-application-dependency");
++const settings_dependency_1 = require("./android/settings-dependency");
++const strings_dependency_1 = require("./android/strings-dependency");
++const app_delegate_dependency_1 = require("./ios/app-delegate-dependency");
++const info_plist_dependency_1 = require("./ios/info-plist-dependency");
+ // @todo: Is this still needed?
+ let pkg = {
+     name: "react-native-code-push",
+@@ -23,13 +23,13 @@
+ const withRnCodepush = (config, props) => {
+     // Plugins order matter, be careful when changing the order.
+     // Apply Android changes
+-    config = (0, buildscriptDependency_1.withAndroidBuildscriptDependency)(config, props);
+-    config = (0, settingsDependency_1.withAndroidSettingsDependency)(config, props);
+-    config = (0, stringsDependency_1.withAndroidStringsDependency)(config, props);
+-    config = (0, mainApplicationDependency_1.withAndroidMainApplicationDependency)(config, props);
++    config = (0, buildscript_dependency_1.withAndroidBuildscriptDependency)(config, props);
++    config = (0, settings_dependency_1.withAndroidSettingsDependency)(config, props);
++    config = (0, strings_dependency_1.withAndroidStringsDependency)(config, props);
++    config = (0, main_application_dependency_1.withAndroidMainApplicationDependency)(config, props);
+     // Apply iOS changes
+-    config = (0, infoPlistDependency_1.withIosInfoPlistDependency)(config, props);
+-    config = (0, appDelegateDependency_1.withIosAppDelegateDependency)(config, props);
++    config = (0, info_plist_dependency_1.withIosInfoPlistDependency)(config, props);
++    config = (0, app_delegate_dependency_1.withIosAppDelegateDependency)(config, props);
+     return config;
+ };
+ exports.default = (0, config_plugins_1.createRunOncePlugin)(withRnCodepush, pkg.name, pkg.version);
+
+Nothing there changes behaviour: type-only import reshuffles, and require()
+specifiers following the renames. `main`, `types` and app.plugin.js's
+require("./build") all still resolve to build/index.js.

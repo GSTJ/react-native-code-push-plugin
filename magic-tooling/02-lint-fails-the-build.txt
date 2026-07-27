@@ -1,0 +1,40 @@
+PROOF: oxlint failures fail the build, including the required status check
+
+The only change on chore/prove-lint-fails vs chore/magic-tooling:
+--------------------------------------------------------------
+diff --git a/src/utils/replace-if-not-found.ts b/src/utils/replace-if-not-found.ts
+index 23d12e6..00933e2 100644
+--- a/src/utils/replace-if-not-found.ts
++++ b/src/utils/replace-if-not-found.ts
+@@ -3,6 +3,7 @@ export function replaceIfNotFound(
+   stringToBeReplaced: string,
+   newStringToReplace: string,
+ ) {
++  console.log("deliberate lint violation, do not merge");
+   // Make sure the original does not contain the new string
+   if (!originalString.includes(newStringToReplace)) {
+     return originalString.replace(stringToBeReplaced, newStringToReplace);
+
+PR #25  https://github.com/GSTJ/react-native-code-push-plugin/pull/25
+--------------------------------------------------------------
+PASS  CodeQL
+      https://github.com/GSTJ/react-native-code-push-plugin/runs/89986545891
+FAIL  Lint, test and build
+      https://github.com/GSTJ/react-native-code-push-plugin/actions/runs/30268923512/job/89986492257
+FAIL  checks / 👮 Lint, Format, Typecheck
+      https://github.com/GSTJ/react-native-code-push-plugin/actions/runs/30268923512/job/89986341847
+PASS  Analyze (javascript)
+      https://github.com/GSTJ/react-native-code-push-plugin/actions/runs/30268922011/job/89986335483
+
+The failing step, verbatim from the run log:
+--------------------------------------------------------------
+run 30268923512
+checks / 👮 Lint, Format, Typecheck	UNKNOWN STEP	2026-07-27T13:09:26.1959156Z + magic-oxlint-config 1.2.0
+checks / 👮 Lint, Format, Typecheck	UNKNOWN STEP	2026-07-27T13:09:26.1960495Z + oxlint 1.75.0
+checks / 👮 Lint, Format, Typecheck	UNKNOWN STEP	2026-07-27T13:09:29.5149675Z $ oxlint --report-unused-disable-directives
+checks / 👮 Lint, Format, Typecheck	UNKNOWN STEP	2026-07-27T13:09:29.6949468Z ##[error]Process completed with exit code 1.
+Lint, test and build	Fail unless the shared workflow passed	﻿2026-07-27T13:09:37.3201188Z ##[group]Run [ "failure" = "success" ]
+Lint, test and build	Fail unless the shared workflow passed	2026-07-27T13:09:37.3202611Z ^[[36;1m[ "failure" = "success" ]^[[0m
+Lint, test and build	Fail unless the shared workflow passed	2026-07-27T13:09:37.3974718Z shell: /usr/bin/bash -e {0}
+Lint, test and build	Fail unless the shared workflow passed	2026-07-27T13:09:37.3976438Z ##[endgroup]
+Lint, test and build	Fail unless the shared workflow passed	2026-07-27T13:09:37.4655007Z ##[error]Process completed with exit code 1.

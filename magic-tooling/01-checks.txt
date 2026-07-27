@@ -1,0 +1,153 @@
+PROOF: install, lint, format, typecheck, test, build, pack — all green
+
+react-native-code-push-plugin, branch chore/magic-tooling (PR #24)
+2026-07-27T13:14:08Z   node v26.5.0   commit fd29026
+node_modules and build/ deleted first, so this is a cold install.
+
+==============================================================
+$ pnpm install --frozen-lockfile
+==============================================================
+✓ Lockfile passes supply-chain policies (verified 3h ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +1171
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 1171, reused 1171, downloaded 0, added 525
+Progress: resolved 1171, reused 1171, downloaded 0, added 1119
+Progress: resolved 1171, reused 1171, downloaded 0, added 1171, done
+
+devDependencies:
++ @babel/core 7.29.7
++ @release-it/conventional-changelog 12.0.0
++ @types/jest 29.5.14
++ @types/node 24.13.3
++ expo 57.0.8
++ expo-module-scripts 3.5.4
++ jest 29.7.0
++ magic-codemods 1.1.0
++ magic-oxfmt-config 1.2.0
++ magic-oxlint-config 1.2.0
++ magic-tsconfig 1.2.0
++ oxfmt 0.60.0
++ oxlint 1.75.0
++ release-it 21.0.0
++ typescript 5.9.3
+
+. prepare$ pnpm run build
+. prepare: $ tsc --project tsconfig.build.json
+. prepare: Done
+Done in 3.2s using pnpm v11.17.0
+--> exit 0
+
+==============================================================
+$ pnpm run lint
+==============================================================
+$ oxlint --report-unused-disable-directives --deny-warnings
+--> exit 0
+
+==============================================================
+$ pnpm run format
+==============================================================
+$ oxfmt --check .
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 138ms on 26 files using 10 threads.
+--> exit 0
+
+==============================================================
+$ pnpm run typecheck
+==============================================================
+$ tsc --noEmit
+--> exit 0
+
+==============================================================
+$ pnpm run test
+==============================================================
+$ jest
+PASS src/android/__tests__/gradle-paths.test.ts
+  android gradle paths
+    ✓ lets node resolve codepush.gradle (1 ms)
+    ✓ does not apply codepush.gradle twice (1 ms)
+    ✓ keeps its hands off projects still on the old hardcoded path
+    ✓ lets node resolve the codepush project dir
+    ✓ does not include the codepush project twice
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        0.148 s, estimated 1 s
+Ran all test suites.
+--> exit 0
+
+==============================================================
+$ pnpm run build
+==============================================================
+$ tsc --project tsconfig.build.json
+--> exit 0
+
+==============================================================
+$ npm pack --dry-run
+==============================================================
+
+> react-native-code-push-plugin@1.0.11 prepare
+> pnpm run build
+
+$ tsc --project tsconfig.build.json
+npm notice
+npm notice 📦  react-native-code-push-plugin@1.0.11
+npm notice Tarball Contents
+npm notice 2.4kB README.md
+npm notice 37B app.plugin.js
+npm notice 598B build/android/buildscript-dependency.d.ts
+npm notice 3.3kB build/android/buildscript-dependency.js
+npm notice 1.5kB build/android/buildscript-dependency.js.map
+npm notice 477B build/android/main-application-dependency.d.ts
+npm notice 3.8kB build/android/main-application-dependency.js
+npm notice 1.8kB build/android/main-application-dependency.js.map
+npm notice 523B build/android/settings-dependency.d.ts
+npm notice 1.4kB build/android/settings-dependency.js
+npm notice 734B build/android/settings-dependency.js.map
+npm notice 312B build/android/strings-dependency.d.ts
+npm notice 2.0kB build/android/strings-dependency.js
+npm notice 1.3kB build/android/strings-dependency.js.map
+npm notice 195B build/index.d.ts
+npm notice 1.7kB build/index.js
+npm notice 937B build/index.js.map
+npm notice 356B build/ios/app-delegate-dependency.d.ts
+npm notice 1.3kB build/ios/app-delegate-dependency.js
+npm notice 633B build/ios/app-delegate-dependency.js.map
+npm notice 367B build/ios/info-plist-dependency.d.ts
+npm notice 1.3kB build/ios/info-plist-dependency.js
+npm notice 727B build/ios/info-plist-dependency.js.map
+npm notice 310B build/plugin-config.d.ts
+npm notice 118B build/plugin-config.js
+npm notice 118B build/plugin-config.js.map
+npm notice 123B build/utils/add-below-anchor-if-not-found.d.ts
+npm notice 648B build/utils/add-below-anchor-if-not-found.js
+npm notice 533B build/utils/add-below-anchor-if-not-found.js.map
+npm notice 688B build/utils/code-push-gradle-path.d.ts
+npm notice 1.1kB build/utils/code-push-gradle-path.js
+npm notice 294B build/utils/code-push-gradle-path.js.map
+npm notice 131B build/utils/replace-if-not-found.d.ts
+npm notice 489B build/utils/replace-if-not-found.js
+npm notice 382B build/utils/replace-if-not-found.js.map
+npm notice 1.7kB package.json
+npm notice Tarball Details
+npm notice name: react-native-code-push-plugin
+npm notice version: 1.0.11
+npm notice filename: react-native-code-push-plugin-1.0.11.tgz
+npm notice package size: 9.1 kB
+npm notice unpacked size: 34.2 kB
+npm notice shasum: 2a0a3f7dfe568a8a2332f2487fe2896f7d5f9119
+npm notice integrity: sha512-bOp+c7OQV7OOY[...]Rf1RBwHFk55XA==
+npm notice total files: 36
+npm notice
+react-native-code-push-plugin-1.0.11.tgz
+--> exit 0
+
+==============================================================
+$ git status --short
+  (release-it aborts on a dirty tree, so install+build must leave none)
+==============================================================
+--> clean
