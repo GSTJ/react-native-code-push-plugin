@@ -2,9 +2,11 @@
   "name": "react-native-code-push-plugin",
   "version": "1.0.11",
   "description": "Config plugin to auto configure react-native-code-push on prebuild",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "sideEffects": false,
+  "keywords": [
+    "expo",
+    "react-native",
+    "react-native-code-push"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -14,10 +16,12 @@
     "build",
     "app.plugin.js"
   ],
+  "sideEffects": false,
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "packageManager": "pnpm@11.17.0",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "expo-module clean",
@@ -30,14 +34,6 @@
     "prepare": "pnpm run build",
     "release": "release-it",
     "expo-module": "expo-module"
-  },
-  "keywords": [
-    "react-native-code-push",
-    "react-native",
-    "expo"
-  ],
-  "peerDependencies": {
-    "expo": ">=49.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
@@ -56,5 +52,9 @@
     "release-it": "^21.0.0",
     "typescript": "^5.9.3"
   },
+  "peerDependencies": {
+    "expo": ">=49.0.0"
+  },
+  "packageManager": "pnpm@11.17.0",
   "upstreamPackage": "react-native-code-push"
 }
