@@ -1,9 +1,10 @@
-import { ResourceXML } from "@expo/config-plugins/build/android/Resources";
 import {
   AndroidConfig,
   ConfigPlugin,
   withStringsXml,
 } from "expo/config-plugins";
+
+type ResourceXML = AndroidConfig.Resources.ResourceXML;
 
 import { PluginConfigType } from "../pluginConfig";
 
