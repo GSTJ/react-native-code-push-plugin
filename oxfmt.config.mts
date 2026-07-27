@@ -1,12 +1,3 @@
-import { base } from "magic-oxfmt-config";
-
-export default {
-  ...base,
-  ignorePatterns: [
-    ...(base.ignorePatterns ?? []),
-    // Rewritten by @release-it/conventional-changelog on every release, with
-    // `*` bullets that oxfmt turns into `-`. Formatting it here would make the
-    // release workflow's own bump PR fail the format check.
-    "CHANGELOG.md",
-  ],
-};
+// magic-oxfmt-config 1.1.0 ignores `**/CHANGELOG.md` itself, so the local
+// re-declaration this file used to carry is gone.
+export { default } from "magic-oxfmt-config";
