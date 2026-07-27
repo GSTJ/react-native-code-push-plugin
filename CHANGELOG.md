@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.0.12](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.11...v1.0.12) (2026-07-27)
+
+* format the repo with oxfmt ([1e7a566](https://github.com/GSTJ/react-native-code-push-plugin/commit/1e7a566056099ec520c24b8658f35fc72061c3fb))
+
+### Bug Fixes
+
+* **android:** apply codepush.gradle without an `apply from:` anchor ([7d29583](https://github.com/GSTJ/react-native-code-push-plugin/commit/7d29583a51fc4e3dd7cc1df2caf8ea16acedaafd)), closes [#26](https://github.com/GSTJ/react-native-code-push-plugin/issues/26)
+* **android:** hook CodePush into MainApplication's ReactHost ([0519cd7](https://github.com/GSTJ/react-native-code-push-plugin/commit/0519cd76b763440e20b961f428a3d6142299cc85))
+* **build:** keep tsc's incremental cache out of the emit path ([2fe3574](https://github.com/GSTJ/react-native-code-push-plugin/commit/2fe3574e073c453de2e261a31b18245040debd7f))
+* **lint:** clear the magic oxlint preset ([aa671ac](https://github.com/GSTJ/react-native-code-push-plugin/commit/aa671acbbf8153420971431166567024c1005f0b))
+
+### Code Refactoring
+
+* **android:** take ResourceXML from expo/config-plugins ([91b76ce](https://github.com/GSTJ/react-native-code-push-plugin/commit/91b76ceb2e89bfc83e575d05828dfc91421126bc))
+* declare PluginConfigType as a type alias ([cc67b2a](https://github.com/GSTJ/react-native-code-push-plugin/commit/cc67b2a0e7fb517527a4cb6b16612776468da57b))
+* kebab-case filenames ([6c0ef7a](https://github.com/GSTJ/react-native-code-push-plugin/commit/6c0ef7aa4ac7867692554396b85ea25a28967587))
+
+### Documentation
+
+* **ci:** note the check-approval gate on release PRs ([#23](https://github.com/GSTJ/react-native-code-push-plugin/issues/23)) ([3330f5e](https://github.com/GSTJ/react-native-code-push-plugin/commit/3330f5e4adb50be6ba2ae2dc0ca37ea6bf2d85ee))
+* say which SDKs prebuild is tested against ([641ad2c](https://github.com/GSTJ/react-native-code-push-plugin/commit/641ad2c0a19c12bc039e1068fa1be734a66b26aa)), references [#import](https://github.com/GSTJ/react-native-code-push-plugin/issues/import)
+* **tooling:** refresh the config comments for 1.2.0 ([39242cc](https://github.com/GSTJ/react-native-code-push-plugin/commit/39242cc08414d56cf6cee27e47b3e6d06225efc2))
+
+### Build System
+
+* **deps:** bump the magic packages to 1.1.0 ([327fa39](https://github.com/GSTJ/react-native-code-push-plugin/commit/327fa39b42244b82544a4adbebf15d7e1e2af00b))
+* **deps:** bump the magic packages to 1.2.0 ([39b11d7](https://github.com/GSTJ/react-native-code-push-plugin/commit/39b11d79f2320d6699794aba2f678e83b320a117))
+* **deps:** move to pnpm and swap eslint/prettier for the magic stack ([8a40864](https://github.com/GSTJ/react-native-code-push-plugin/commit/8a40864d1e60955113686e74861b72fd9cfab535))
+
+### Continuous Integration
+
+* call the shared workflow by tag instead of [@main](https://github.com/main) ([#29](https://github.com/GSTJ/react-native-code-push-plugin/issues/29)) ([46cc903](https://github.com/GSTJ/react-native-code-push-plugin/commit/46cc9036c0d029acc16bca175cec23e346d5f20b))
+* **lint:** make a stale disable directive fail the build ([fd29026](https://github.com/GSTJ/react-native-code-push-plugin/commit/fd290262c729d166cfed553980b9576ae585b4a3))
+* run the checks through GSTJ/magic and pnpm ([2a13c39](https://github.com/GSTJ/react-native-code-push-plugin/commit/2a13c39abb7af83b613d348a1e441cf6121b92bd))
+
+### Chores
+
+* extend the shared renovate preset ([cbf6fd2](https://github.com/GSTJ/react-native-code-push-plugin/commit/cbf6fd2ee2d333c3ac904e8c1c5abdc21cc0aadf))
+* **tooling:** adopt the magic oxlint and oxfmt configs ([84a44dc](https://github.com/GSTJ/react-native-code-push-plugin/commit/84a44dc9582a383d118aed5e9a07ad6e518b51b2))
+* **tooling:** drop the workarounds 1.1.0 made unnecessary ([46dc95b](https://github.com/GSTJ/react-native-code-push-plugin/commit/46dc95b5e93471f19561bccf0d4fad09bc8895ec))
+
 ## [1.0.11](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.10...v1.0.11) (2026-07-27)
 
 ### Continuous Integration
