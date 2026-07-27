@@ -98,8 +98,17 @@ jobs:
           Auto-merges as a merge commit once CI and CodeQL pass. A squash would rewrite the commit and leave the tag outside master's history, which breaks the changelog range for the next release.
           BODY
 
-          url=$(gh pr create --base "$BASE" --head "$branch" \
-            --title "chore(release): v$VERSION" --body-file /tmp/pr-body.md)
+          # npm and the tag are already out by this point, so a failure here
+          # leaves master a version behind the registry. The usual cause is
+          # "Allow GitHub Actions to create and approve pull requests" being
+          # off, and the GITHUB_TOKEN has no scope to read that setting, so say
+          # what to do rather than let a bare GraphQL error stand.
+          if ! url=$(gh pr create --base "$BASE" --head "$branch" \
+            --title "chore(release): v$VERSION" --body-file /tmp/pr-body.md 2>&1); then
+            echo "$url"
+            echo "::error::v$VERSION is on npm and tagged, but the bump PR could not be opened, so master is behind. The branch $branch is pushed: open a PR from it and merge with a merge commit, not a squash. If the error mentions Actions not being permitted to create pull requests, turn that on under Settings > Actions > General."
+            exit 1
+          fi
           number="${url##*/}"
           echo "opened $url"
 
