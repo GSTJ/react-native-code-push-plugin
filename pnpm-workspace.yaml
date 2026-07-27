@@ -1,9 +1,9 @@
 minimumReleaseAgeExclude:
   - eslint-plugin-safe-jsx@1.3.0
   - magic-codemods@1.1.0
-  - magic-oxfmt-config@1.1.0
-  - magic-oxlint-config@1.1.0
-  - magic-tsconfig@1.1.0
+  - magic-oxfmt-config@1.2.0
+  - magic-oxlint-config@1.2.0
+  - magic-tsconfig@1.2.0
 # pnpm 11 no longer reads the `pnpm` key from package.json, and `overrides` has
 # no other home, so this file exists for the three pins that used to live in
 # yarn's `resolutions`. Yarn's `**/a/b` globs become pnpm's `a>b` selectors.
