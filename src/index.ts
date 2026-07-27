@@ -8,6 +8,7 @@ import { withAndroidMainApplicationDependency } from "./android/main-application
 import { withAndroidSettingsDependency } from "./android/settings-dependency";
 import { withAndroidStringsDependency } from "./android/strings-dependency";
 import { withIosAppDelegateDependency } from "./ios/app-delegate-dependency";
+import { withIosBridgingHeaderDependency } from "./ios/bridging-header-dependency";
 import { withIosInfoPlistDependency } from "./ios/info-plist-dependency";
 
 // @todo: Is this still needed?
@@ -35,6 +36,7 @@ const withRnCodepush: ConfigPlugin<PluginConfigType> = (config, props) => {
   // Apply iOS changes
   config = withIosInfoPlistDependency(config, props);
   config = withIosAppDelegateDependency(config, props);
+  config = withIosBridgingHeaderDependency(config, props);
 
   return config;
 };
