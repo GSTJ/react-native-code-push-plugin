@@ -1,8 +1,8 @@
 import { ConfigPlugin, withAppDelegate } from "expo/config-plugins";
 
-import { PluginConfigType } from "../pluginConfig";
-import { addBelowAnchorIfNotFound } from "../utils/addBelowAnchorIfNotFound";
-import { replaceIfNotFound } from "../utils/replaceIfNotFound";
+import { PluginConfigType } from "../plugin-config";
+import { addBelowAnchorIfNotFound } from "../utils/add-below-anchor-if-not-found";
+import { replaceIfNotFound } from "../utils/replace-if-not-found";
 
 /**
  * Makes the app delegate aware of the CodePush bundle location.

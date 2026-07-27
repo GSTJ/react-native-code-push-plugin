@@ -6,7 +6,7 @@ import {
 
 type ResourceXML = AndroidConfig.Resources.ResourceXML;
 
-import { PluginConfigType } from "../pluginConfig";
+import { PluginConfigType } from "../plugin-config";
 
 /** Helper to add string.xml JSON items or overwrite existing items with the same name. */
 function setStrings(strings: ResourceXML, name: string, value: string) {

@@ -1,8 +1,8 @@
 import { ConfigPlugin, withAppBuildGradle } from "expo/config-plugins";
 
-import { PluginConfigType } from "../pluginConfig";
-import { addBelowAnchorIfNotFound } from "../utils/addBelowAnchorIfNotFound";
-import { codePushGradlePath } from "../utils/codePushGradlePath";
+import { PluginConfigType } from "../plugin-config";
+import { addBelowAnchorIfNotFound } from "../utils/add-below-anchor-if-not-found";
+import { codePushGradlePath } from "../utils/code-push-gradle-path";
 
 export function applyImplementation(appBuildGradle: string) {
   const codePushImplementation = `apply from: ${codePushGradlePath(
