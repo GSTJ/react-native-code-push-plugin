@@ -16,7 +16,11 @@ jobs:
   checks:
     # Install, lint, format and typecheck are the shared workflow's; node comes
     # from .nvmrc and pnpm from the `packageManager` field.
-    uses: GSTJ/magic/.github/workflows/ci.yml@main
+    #
+    # `@v1` is the moving major tag, so a fix in the shared workflow lands here
+    # on the next run. Never `@main`: an unreviewed merge there would rerun
+    # every consumer's CI.
+    uses: GSTJ/magic/.github/workflows/ci.yml@v1
     with:
       build-command: pnpm run build
       test-command: pnpm run test
