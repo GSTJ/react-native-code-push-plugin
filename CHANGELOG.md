@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.13](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.12...v1.0.13) (2026-07-27)
+
+### Bug Fixes
+
+* **ios:** redirect the bundle URL on Expo SDK 53's Swift AppDelegate ([bb07d7b](https://github.com/GSTJ/react-native-code-push-plugin/commit/bb07d7ba392334edd3231077d8cfe7f0728ba03a)), closes [#30](https://github.com/GSTJ/react-native-code-push-plugin/issues/30), references [#import](https://github.com/GSTJ/react-native-code-push-plugin/issues/import) [#if](https://github.com/GSTJ/react-native-code-push-plugin/issues/if) [#import](https://github.com/GSTJ/react-native-code-push-plugin/issues/import)
+* throw when a native file anchor is missing instead of no-op ([fb416b1](https://github.com/GSTJ/react-native-code-push-plugin/commit/fb416b1edab3cdd7c90bea3effb094f6e7433772)), references [#30](https://github.com/GSTJ/react-native-code-push-plugin/issues/30)
+
 ## [1.0.12](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.11...v1.0.12) (2026-07-27)
 
 * format the repo with oxfmt ([1e7a566](https://github.com/GSTJ/react-native-code-push-plugin/commit/1e7a566056099ec520c24b8658f35fc72061c3fb))
