@@ -1,6 +1,8 @@
-import { ConfigPlugin, withAppDelegate } from "expo/config-plugins";
+import type { PluginConfigType } from "../plugin-config";
+import type { ConfigPlugin } from "expo/config-plugins";
 
-import { PluginConfigType } from "../plugin-config";
+import { withAppDelegate } from "expo/config-plugins";
+
 import { addBelowAnchorIfNotFound } from "../utils/add-below-anchor-if-not-found";
 import { replaceIfNotFound } from "../utils/replace-if-not-found";
 

@@ -1,4 +1,7 @@
-import { ConfigPlugin, createRunOncePlugin } from "expo/config-plugins";
+import type { PluginConfigType } from "./plugin-config";
+import type { ConfigPlugin } from "expo/config-plugins";
+
+import { createRunOncePlugin } from "expo/config-plugins";
 
 import { withAndroidBuildscriptDependency } from "./android/buildscript-dependency";
 import { withAndroidMainApplicationDependency } from "./android/main-application-dependency";
@@ -6,7 +9,6 @@ import { withAndroidSettingsDependency } from "./android/settings-dependency";
 import { withAndroidStringsDependency } from "./android/strings-dependency";
 import { withIosAppDelegateDependency } from "./ios/app-delegate-dependency";
 import { withIosInfoPlistDependency } from "./ios/info-plist-dependency";
-import { PluginConfigType } from "./plugin-config";
 
 // @todo: Is this still needed?
 let pkg: { name: string; version?: string } = {

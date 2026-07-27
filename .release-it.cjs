@@ -41,7 +41,8 @@ module.exports = {
       header: "# Changelog",
       // Each release leaves a `chore(release)` bump commit and the merge commit
       // that lands it. Neither is worth a changelog line.
-      commitFilter: (commit) => !/^chore\(release\)/.test(commit.header ?? ""),
+      commitFilter: (commit) =>
+        !(commit.header ?? "").startsWith("chore(release)"),
       preset: {
         name: "conventionalcommits",
         types: [

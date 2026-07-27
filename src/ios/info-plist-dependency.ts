@@ -1,6 +1,7 @@
-import { ConfigPlugin, withInfoPlist } from "expo/config-plugins";
+import type { PluginConfigType } from "../plugin-config";
+import type { ConfigPlugin } from "expo/config-plugins";
 
-import { PluginConfigType } from "../plugin-config";
+import { withInfoPlist } from "expo/config-plugins";
 
 /**
  * Sets the CodePushServerURL and CodePushDeploymentKey in the iOS Info.plist

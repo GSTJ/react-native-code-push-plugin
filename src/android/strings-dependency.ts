@@ -1,15 +1,12 @@
-import {
-  AndroidConfig,
-  ConfigPlugin,
-  withStringsXml,
-} from "expo/config-plugins";
+import type { PluginConfigType } from "../plugin-config";
+import type { ConfigPlugin } from "expo/config-plugins";
+
+import { AndroidConfig, withStringsXml } from "expo/config-plugins";
 
 type ResourceXML = AndroidConfig.Resources.ResourceXML;
 
-import { PluginConfigType } from "../plugin-config";
-
 /** Helper to add string.xml JSON items or overwrite existing items with the same name. */
-function setStrings(strings: ResourceXML, name: string, value: string) {
+const setStrings = (strings: ResourceXML, name: string, value: string) => {
   const xmlProperties = { name, moduleConfig: true };
 
   return AndroidConfig.Strings.setStringItem(
@@ -20,7 +17,7 @@ function setStrings(strings: ResourceXML, name: string, value: string) {
     ],
     strings,
   );
-}
+};
 
 /**
  * Update `<project>/app/src/main/res/values/strings.xml` by adding react-native-code-push deployment key

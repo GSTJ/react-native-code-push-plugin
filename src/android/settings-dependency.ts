@@ -1,6 +1,8 @@
-import { ConfigPlugin, withSettingsGradle } from "expo/config-plugins";
+import type { PluginConfigType } from "../plugin-config";
+import type { ConfigPlugin } from "expo/config-plugins";
 
-import { PluginConfigType } from "../plugin-config";
+import { withSettingsGradle } from "expo/config-plugins";
+
 import { codePushGradlePath } from "../utils/code-push-gradle-path";
 
 export function applySettings(gradleSettings: string) {
