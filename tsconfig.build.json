@@ -1,0 +1,13 @@
+{
+  // `typecheck` covers the tests; the published build must not contain them.
+  "extends": "./tsconfig.json",
+  "include": ["./src"],
+  "exclude": ["**/__mocks__/*", "**/__tests__/*"],
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "declaration": true,
+    "sourceMap": true
+  }
+}

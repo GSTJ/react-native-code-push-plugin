@@ -1,9 +1,15 @@
 {
-  "extends": "expo-module-scripts/tsconfig.plugin",
-  "compilerOptions": {
-    "outDir": "./build",
-    "sourceMap": true
-  },
+  "extends": "magic-tsconfig/base.json",
   "include": ["./src"],
-  "exclude": ["**/__mocks__/*", "**/__tests__/*"]
+  "compilerOptions": {
+    // Expo loads a config plugin through `require`, and app.plugin.js points at
+    // `./build`, so the emit has to stay CommonJS. magic-tsconfig's base is
+    // bundler-oriented (module Preserve, moduleResolution Bundler), which would
+    // emit ESM and break every consumer's prebuild.
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    // magic-tsconfig deliberately pulls in no global type packages. `require`
+    // in src/index.ts needs node, and the tests need jest.
+    "types": ["node", "jest"]
+  }
 }
