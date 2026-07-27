@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -50,11 +51,10 @@ jobs:
 
       - run: yarn build
 
-      # release-it pushes the version commit and the tag back to master, and
-      # actions/checkout leaves the branch without an upstream to push to.
-      - run: git branch --set-upstream-to=origin/${{ github.ref_name }}
-
+      # Publishes to npm, pushes the annotated tag and creates the GitHub
+      # release. The version bump commit stays local, see .release-it.cjs.
       - name: Release
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -74,3 +74,37 @@ jobs:
           fi
 
           yarn release $args
+
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      # master requires status checks and a fresh commit has none, so the bump
+      # has to arrive as a PR. Merge commit, not squash: the tag points at the
+      # bump commit, and squashing would rewrite it and leave the tag off
+      # master's history, which breaks the next release's changelog range.
+      - name: Land the version bump on master
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+          BASE: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          branch="chore/release-v$VERSION"
+          git push origin "HEAD:refs/heads/$branch"
+
+          cat > /tmp/pr-body.md <<BODY
+          Version bump and changelog for [v$VERSION](https://github.com/$REPO/releases/tag/v$VERSION), opened by the release workflow. npm and the tag are already out; this lands the commit the tag points at.
+
+          Auto-merges as a merge commit once CI and CodeQL pass. A squash would rewrite the commit and leave the tag outside master's history, which breaks the changelog range for the next release.
+          BODY
+
+          url=$(gh pr create --base "$BASE" --head "$branch" \
+            --title "chore(release): v$VERSION" --body-file /tmp/pr-body.md)
+          number="${url##*/}"
+          echo "opened $url"
+
+          # The merge commit lands on master too, so it needs a conventional
+          # subject. `.release-it.cjs` filters `chore(release)` out of the
+          # changelog, so neither this nor the bump commit shows up next time.
+          gh pr merge "$number" --auto --merge --delete-branch \
+            --subject "chore(release): v$VERSION (#$number)" --body ""
