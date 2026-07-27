@@ -1,7 +1,9 @@
-import { ConfigPlugin, withMainApplication } from "expo/config-plugins";
+import type { PluginConfigType } from "../plugin-config";
+import type { ConfigPlugin } from "expo/config-plugins";
 
-import { PluginConfigType } from "../pluginConfig";
-import { addBelowAnchorIfNotFound } from "../utils/addBelowAnchorIfNotFound";
+import { withMainApplication } from "expo/config-plugins";
+
+import { addBelowAnchorIfNotFound } from "../utils/add-below-anchor-if-not-found";
 
 /**
  * Updates the `MainApplication.java` by adding the CodePush runtime initialization code

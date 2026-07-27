@@ -34,22 +34,28 @@ jobs:
           # last one to work out the bump and the changelog entries.
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
+
       # No `registry-url` here on purpose: it writes an `.npmrc` holding a
-      # literal `${NODE_AUTH_TOKEN}`, and the `cache: yarn` probe then runs
-      # `yarn cache dir`, which dies on "Failed to replace env in config".
-      # The Release step below writes the token itself.
+      # literal `${NODE_AUTH_TOKEN}`, which the package-manager probes behind
+      # `cache:` choke on. The Release step below writes the token itself.
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
-          cache: yarn
+          node-version-file: .nvmrc
+          cache: pnpm
 
-      - run: yarn install --frozen-lockfile
+      # `prepare` builds, so this already produces `build/` once.
+      - run: pnpm install --frozen-lockfile
 
-      - run: yarn lint --max-warnings 0
+      - run: pnpm run lint
 
-      - run: yarn test
+      - run: pnpm run format
 
-      - run: yarn build
+      - run: pnpm run typecheck
+
+      - run: pnpm run test
+
+      - run: pnpm run build
 
       # Publishes to npm, pushes the annotated tag and creates the GitHub
       # release. The version bump commit stays local, see .release-it.cjs.
@@ -73,7 +79,7 @@ jobs:
             args="$args --dry-run"
           fi
 
-          yarn release $args
+          pnpm run release $args
 
           echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 

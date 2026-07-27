@@ -1,7 +1,7 @@
 /**
  * Secrets for `react-native-code-push`
  */
-export interface PluginConfigType {
+export type PluginConfigType = {
   ios: {
     CodePushServerURL?: string;
     CodePushDeploymentKey: string;
@@ -11,4 +11,4 @@ export interface PluginConfigType {
     CodePushDeploymentKey: string;
     CodePushPublicKey?: string;
   };
-}
+};

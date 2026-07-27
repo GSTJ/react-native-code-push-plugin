@@ -1,5 +1,5 @@
-import { applyImplementation } from "../buildscriptDependency";
-import { applySettings } from "../settingsDependency";
+import { applyImplementation } from "../buildscript-dependency";
+import { applySettings } from "../settings-dependency";
 
 /** The `apply from:` line shipped by Expo 50's app/build.gradle. */
 const appBuildGradle = `
