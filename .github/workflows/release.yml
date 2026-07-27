@@ -81,6 +81,17 @@ jobs:
       # has to arrive as a PR. Merge commit, not squash: the tag points at the
       # bump commit, and squashing would rewrite it and leave the tag off
       # master's history, which breaks the next release's changelog range.
+      #
+      # v1.0.11 needed its two check runs approved by hand before auto-merge
+      # would fire. GitHub held them as `action_required` because
+      # `github-actions[bot]` had no merged PR here yet and the fork-PR approval
+      # policy was `first_time_contributors`. The policy is now
+      # `first_time_contributors_new_to_github` and the bot has a merged PR, so
+      # this shouldn't recur. If a release PR sits with no checks reported, that
+      # is what happened: approve the runs on the Actions tab, or
+      # `gh api -X POST repos/OWNER/REPO/actions/runs/RUN_ID/approve`.
+      # npm, the tag and the GitHub release are already out at that point, so
+      # only the bump on master is waiting.
       - name: Land the version bump on master
         if: ${{ !inputs.dry-run }}
         env:
