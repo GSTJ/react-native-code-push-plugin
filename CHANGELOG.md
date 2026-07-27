@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.11](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.10...v1.0.11) (2026-07-27)
+
+### Continuous Integration
+
+* say what to do when the release PR can't be opened ([#21](https://github.com/GSTJ/react-native-code-push-plugin/issues/21)) ([aa1e9d5](https://github.com/GSTJ/react-native-code-push-plugin/commit/aa1e9d5392eb5e8a20660d0329ba4c9fc5391794))
+
 ## [1.0.10](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.9...v1.0.10) (2026-07-27)
 
 ### Bug Fixes
