@@ -2,10 +2,11 @@ import { extendConfig } from "magic-oxlint-config";
 import base from "magic-oxlint-config/base";
 
 // `extendConfig` flattens the preset into a single config rather than going
-// through oxlint's `extends`, which still drops `ignorePatterns` on oxlint
-// 1.75.0 + magic-oxlint-config 1.1.0 — verified with `oxlint --print-config`
-// and by linting a probe file under `**/generated/**`. Flattening means there
-// is no re-declared ignore list here to drift from the preset's.
+// through oxlint's `extends`, which is the only other supported shape and
+// cannot carry `ignorePatterns` — oxlint has no per-override ignore, so
+// magic-oxlint-config 1.2.0 stopped documenting `extends` entirely. Flattening
+// carries the ignore list and the preset's `env`/`globals` by construction,
+// with nothing local to drift from the preset.
 export default extendConfig(base, {
   overrides: [
     {
