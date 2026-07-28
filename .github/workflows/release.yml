@@ -79,9 +79,25 @@ jobs:
             args="$args --dry-run"
           fi
 
+          before=$(node -p "require('./package.json').version")
           pnpm run release $args
+          after=$(node -p "require('./package.json').version")
 
-          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "version=$after" >> "$GITHUB_OUTPUT"
+
+          # Now that the changelog types carry `effect`, only the `bump` ones
+          # can raise a version, so a cycle of nothing but docs/chore/build/
+          # refactor commits recommends nothing. release-it prints "No new
+          # version to release", exits 0 and leaves the tree alone. Without
+          # this flag the next step would push an empty branch, fail to open a
+          # PR against it and report that npm and the tag are out when neither
+          # is. Re-run with the `increment` input if a release was the point.
+          if [ "$before" = "$after" ]; then
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No new version to release. Nothing was published or tagged. Dispatch again with an explicit \`increment\` to force one."
+          else
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          fi
 
       # master requires status checks and a fresh commit has none, so the bump
       # has to arrive as a PR. Merge commit, not squash: the tag points at the
@@ -99,7 +115,7 @@ jobs:
       # npm, the tag and the GitHub release are already out at that point, so
       # only the bump on master is waiting.
       - name: Land the version bump on master
-        if: ${{ !inputs.dry-run }}
+        if: ${{ !inputs.dry-run && steps.release.outputs.released == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.release.outputs.version }}

@@ -26,8 +26,11 @@
 //             test                   tests are not in `files`
 //
 // `effect: "changelog"` is the point: those types render without entering the
-// bump count, so a release of nothing but `build:` commits is still a patch.
-// Only the `bump` types can raise a version.
+// bump count. Only the `bump` types can raise a version, so a cycle of nothing
+// but `build:` and `docs:` commits recommends no release at all, not a patch.
+// release-it handles that by exiting 0 with "No new version to release" and
+// touching nothing, and the release workflow's `increment` input is there to
+// force a version out anyway when one is wanted.
 //
 // Breaking changes are not configurable here and don't need to be. The
 // preset's writer sets `discard = false` the moment a commit carries a note,
