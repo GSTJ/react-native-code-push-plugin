@@ -25,8 +25,13 @@ jobs:
       build-command: pnpm run build
       test-command: pnpm run test
       # `build/` is generated, so the only way to know the published tarball
-      # isn't empty is to pack one.
-      extra-command: npm pack --dry-run
+      # isn't empty is to pack one. changelog:check renders a synthetic history
+      # of every commit type through the real changelog preset and fails if a
+      # type renders against policy or a breaking change goes missing.
+      #
+      # One `extra-command`, so they're chained. `&&` short-circuits, which is
+      # what we want: either failing fails the job.
+      extra-command: npm pack --dry-run && pnpm run changelog:check
       # Nothing here uses turbo.
       turbo-cache: false
 
