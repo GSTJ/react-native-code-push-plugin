@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.14](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.13...v1.0.14) (2026-07-28)
+
+### Bug Fixes
+
+* **changelog:** use effect, because hidden does nothing ([#35](https://github.com/GSTJ/react-native-code-push-plugin/issues/35)) ([379b8b7](https://github.com/GSTJ/react-native-code-push-plugin/commit/379b8b7a8ec37789ceb0e72edae794e2a2e40314))
+
+### Documentation
+
+* add a security policy ([#34](https://github.com/GSTJ/react-native-code-push-plugin/issues/34)) ([cdb93d9](https://github.com/GSTJ/react-native-code-push-plugin/commit/cdb93d9280062f08ab8b81e4b8c21b287b4616d0))
+
 ## [1.0.13](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.12...v1.0.13) (2026-07-27)
 
 ### Bug Fixes
