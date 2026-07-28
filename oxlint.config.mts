@@ -10,10 +10,16 @@ import base from "magic-oxlint-config/base";
 export default extendConfig(base, {
   overrides: [
     {
+      // tools/ holds the changelog preset and its control script. Printing to
+      // the terminal is what the control is for, the CI job reads its output.
+      files: ["tools/**"],
+      rules: { "no-console": "off" },
+    },
+    {
       // `${version}` and friends in this file are release-it's own template
       // syntax, interpolated by release-it at release time. They are supposed
       // to reach it uninterpolated, so a real template literal would be the bug.
-      files: [".release-it.cjs"],
+      files: [".release-it.mjs"],
       rules: { "no-template-curly-in-string": "off" },
     },
   ],

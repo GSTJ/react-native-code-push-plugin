@@ -58,7 +58,7 @@ jobs:
       - run: pnpm run build
 
       # Publishes to npm, pushes the annotated tag and creates the GitHub
-      # release. The version bump commit stays local, see .release-it.cjs.
+      # release. The version bump commit stays local, see .release-it.mjs.
       - name: Release
         id: release
         env:
@@ -130,7 +130,10 @@ jobs:
           echo "opened $url"
 
           # The merge commit lands on master too, so it needs a conventional
-          # subject. `.release-it.cjs` filters `chore(release)` out of the
-          # changelog, so neither this nor the bump commit shows up next time.
+          # subject. `--merge` rather than `--squash` is what keeps both this
+          # and the bump commit out of the next changelog: conventional-changelog
+          # skips merge commits, and a merge is what this produces. There used
+          # to be a `commitFilter` in the release-it config claiming that job,
+          # but the plugin never read the key.
           gh pr merge "$number" --auto --merge --delete-branch \
             --subject "chore(release): v$VERSION (#$number)" --body ""
