@@ -5,12 +5,13 @@ minimumReleaseAgeExclude:
   - magic-oxlint-config@1.2.0
   - magic-tsconfig@1.2.0
   # Let the security fix through the global release-age gate.
-  - brace-expansion@1.1.17
+  - brace-expansion@1.1.18
 # pnpm 11 no longer reads the `pnpm` key from package.json, and `overrides` has
 # no other home, so this file carries the old Yarn pins and scoped security
 # fixes. Yarn's `**/a/b` globs become pnpm's `a>b` selectors.
 overrides:
   "@expo/plist>@xmldom/xmldom": 0.8.13
   "@typescript-eslint/typescript-estree>minimatch": 9.0.7
-  brace-expansion@<1.1.17: ^1.1.17
+  brace-expansion@<1.1.18: ^1.1.18
+  brace-expansion@>=4.0.0 <5.0.9: ^5.0.9
   xcode>uuid: 11.1.1
