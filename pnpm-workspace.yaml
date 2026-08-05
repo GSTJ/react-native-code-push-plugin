@@ -1,4 +1,38 @@
+minimumReleaseAge: 20160
 minimumReleaseAgeExclude:
+  # Grandfather the exact lockfile from 2026-08-04. Future versions still have
+  # to clear the full release-age window.
+  - "@eslint-community/eslint-utils@4.10.1"
+  - "@expo/cli@57.0.10"
+  - "@expo/config-plugins@57.0.6"
+  - "@expo/config@57.0.6"
+  - "@expo/fingerprint@0.20.6"
+  - "@expo/image-utils@0.11.4"
+  - "@expo/metro-config@57.0.7"
+  - "@expo/prebuild-config@57.0.9"
+  - "@expo/require-utils@57.0.4"
+  - "@expo/router-server@57.0.4"
+  - "@release-it/conventional-changelog@12.0.0"
+  - babel-preset-expo@57.0.4
+  - baseline-browser-mapping@2.11.3
+  - brace-expansion@5.0.9
+  - electron-to-chromium@1.5.396
+  - expo-asset@57.0.7
+  - expo-constants@57.0.7
+  - expo-modules-autolinking@57.0.9
+  - expo-modules-core@57.0.7
+  - expo-modules-jsi@57.0.4
+  - expo@57.0.8
+  - flatted@3.4.3
+  - flow-estree@0.324.0
+  - flow-parser@0.324.0
+  - giget@3.3.1
+  - ip-address@10.3.1
+  - postcss@8.5.23
+  - release-it@21.0.0
+  - sax@1.6.1
+  - undici@7.29.0
+  # Allow the first-party tooling versions this repo was built against.
   - eslint-plugin-safe-jsx@1.3.0
   - magic-codemods@1.1.0
   - magic-oxfmt-config@1.2.0
