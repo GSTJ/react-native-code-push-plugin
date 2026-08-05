@@ -1,6 +1,6 @@
 {
   "name": "react-native-code-push-plugin",
-  "version": "1.0.14",
+  "version": "2.0.0",
   "description": "Config plugin to auto configure react-native-code-push on prebuild",
   "keywords": [
     "expo",

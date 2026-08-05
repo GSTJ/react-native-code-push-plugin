@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.0.0](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.14...v2.0.0) (2026-08-05)
+
+### ⚠ BREAKING CHANGES
+
+* Both Android and iOS CodePushServerURL values are required.
+
+### Bug Fixes
+
+* require a working CodePush server URL ([#41](https://github.com/GSTJ/react-native-code-push-plugin/issues/41)) ([0b5c71a](https://github.com/GSTJ/react-native-code-push-plugin/commit/0b5c71a69825bac5350512ab5d69965a3603b53c))
+
+### Build System
+
+* **deps:** patch brace-expansion DoS ([#38](https://github.com/GSTJ/react-native-code-push-plugin/issues/38)) ([8ea4877](https://github.com/GSTJ/react-native-code-push-plugin/commit/8ea48776f25d896c934e817b831f7390a42702ca))
+* **deps:** patch brace-expansion vulnerability ([#37](https://github.com/GSTJ/react-native-code-push-plugin/issues/37)) ([63789e9](https://github.com/GSTJ/react-native-code-push-plugin/commit/63789e9d788cfcd94fe0048b27da016810e1be58))
+
+### Chores
+
+* **deps:** allow immediate magic tooling updates ([#40](https://github.com/GSTJ/react-native-code-push-plugin/issues/40)) ([a623a27](https://github.com/GSTJ/react-native-code-push-plugin/commit/a623a27bb16e8190d8698d72b1d254843ec5fc9f))
+* **deps:** enforce a 14-day release age ([#39](https://github.com/GSTJ/react-native-code-push-plugin/issues/39)) ([8542927](https://github.com/GSTJ/react-native-code-push-plugin/commit/85429274f8fac6c2c8866f692e575ee960d752cc))
+
 ## [1.0.14](https://github.com/GSTJ/react-native-code-push-plugin/compare/v1.0.13...v1.0.14) (2026-07-28)
 
 ### Bug Fixes
