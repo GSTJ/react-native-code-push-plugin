@@ -31,9 +31,10 @@
     "format": "oxfmt --check .",
     "format:fix": "oxfmt .",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "node tools/dependency-security-check.mjs && jest",
     "prepare": "pnpm run build",
     "release": "release-it",
+    "security:check": "node tools/dependency-security-check.mjs && pnpm audit --audit-level high",
     "expo-module": "expo-module"
   },
   "devDependencies": {

@@ -1,3 +1,9 @@
+audit:
+  # image-size has no fixed release. The pnpm patch below fixes both advisories,
+  # and security:check exercises the patched parsers before audit runs.
+  ignore:
+    - GHSA-w3rx-r6r6-pgpr
+    - GHSA-5p2g-fcmc-qvqq
 minimumReleaseAge: 20160
 minimumReleaseAgeExclude:
   # Grandfather the exact lockfile from 2026-08-04. Future versions still have
@@ -37,6 +43,7 @@ minimumReleaseAgeExclude:
   - "magic-*"
   # Let the security fix through the global release-age gate.
   - brace-expansion@1.1.18
+  - nanoid@3.3.18
 # pnpm 11 no longer reads the `pnpm` key from package.json, and `overrides` has
 # no other home, so this file carries the old Yarn pins and scoped security
 # fixes. Yarn's `**/a/b` globs become pnpm's `a>b` selectors.
@@ -46,3 +53,5 @@ overrides:
   brace-expansion@<1.1.18: ^1.1.18
   brace-expansion@>=4.0.0 <5.0.9: ^5.0.9
   xcode>uuid: 11.1.1
+patchedDependencies:
+  image-size@1.2.1: patches/image-size@1.2.1.patch
