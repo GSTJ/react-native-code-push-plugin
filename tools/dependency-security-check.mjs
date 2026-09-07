@@ -147,6 +147,44 @@ assert.equal(randomCalls, 0);
 const pnpmStore = join(process.cwd(), "node_modules/.pnpm");
 const installedPackages = readdirSync(pnpmStore);
 
+const packageInStore = (name, version) => {
+  const directory = installedPackages.find((entry) =>
+    entry.startsWith(`${name.replace("/", "+")}@${version}`),
+  );
+
+  assert.ok(directory, `${name} ${version} is installed`);
+
+  return join(pnpmStore, directory, "node_modules", name, "package.json");
+};
+
+for (const version of ["0.8.15", "0.9.12"]) {
+  const packageJson = packageInStore("@xmldom/xmldom", version);
+  const { DOMImplementation, XMLSerializer } =
+    requireFrom(packageJson)("@xmldom/xmldom");
+  const document = new DOMImplementation().createDocument(null, "root", null);
+
+  assert.throws(
+    () => document.createEntityReference("safe; <injected/> &x"),
+    /not a valid xml name/,
+  );
+
+  const reference = document.createEntityReference("safe");
+  reference.nodeName = "safe; <injected/> &x";
+  const serializer = new XMLSerializer();
+  const serialize =
+    version === "0.8.15"
+      ? () =>
+          serializer.serializeToString(reference, false, undefined, {
+            requireWellFormed: true,
+          })
+      : () =>
+          serializer.serializeToString(reference, {
+            requireWellFormed: true,
+          });
+
+  assert.throws(serialize, /not a valid XML Name/);
+}
+
 for (const version of ["3.15.1", "4.3.1"]) {
   const directory = installedPackages.find((entry) =>
     entry.startsWith(`js-yaml@${version}`),
@@ -177,6 +215,10 @@ for (const version of ["3.15.1", "4.3.1"]) {
 }
 
 for (const vulnerablePackage of [
+  "@xmldom+xmldom@0.8.13",
+  "@xmldom+xmldom@0.8.14",
+  "@xmldom+xmldom@0.9.10",
+  "@xmldom+xmldom@0.9.11",
   "js-yaml@3.15.0",
   "js-yaml@4.3.0",
   "nanoid@3.3.16",
@@ -190,5 +232,5 @@ for (const vulnerablePackage of [
 }
 
 console.log(
-  "Dependency security checks passed for js-yaml, nanoid and image-size.",
+  "Dependency security checks passed for @xmldom/xmldom, js-yaml, nanoid and image-size.",
 );
