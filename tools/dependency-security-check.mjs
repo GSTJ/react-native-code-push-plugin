@@ -185,7 +185,7 @@ for (const version of ["0.8.15", "0.9.12"]) {
   assert.throws(serialize, /not a valid XML Name/);
 }
 
-for (const version of ["3.15.1", "4.3.1"]) {
+for (const version of ["3.15.2", "4.3.2"]) {
   const directory = installedPackages.find((entry) =>
     entry.startsWith(`js-yaml@${version}`),
   );
@@ -220,7 +220,9 @@ for (const vulnerablePackage of [
   "@xmldom+xmldom@0.9.10",
   "@xmldom+xmldom@0.9.11",
   "js-yaml@3.15.0",
+  "js-yaml@3.15.1",
   "js-yaml@4.3.0",
+  "js-yaml@4.3.1",
   "nanoid@3.3.16",
   "nanoid@3.3.17",
 ]) {
