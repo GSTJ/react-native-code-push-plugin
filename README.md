@@ -10,9 +10,11 @@ Config plugin to auto-configure [`react-native-code-push`][lib] when the native 
 
 ### Add the package to your npm dependencies
 
-> Prebuild is tested against Expo SDK 50 and SDK 57. Android is covered on both;
-> on iOS the plugin writes `Info.plist` but does not yet touch the Swift
-> `AppDelegate` that SDK 52 and up generate.
+> Prebuild is tested against Expo SDK 50 and SDK 57. Android and iOS are both
+> covered on both: on iOS the plugin writes `Info.plist` and, on SDK 53's
+> Swift `AppDelegate`, redirects `ReactNativeDelegate.bundleURL()` to
+> `CodePush.bundleURL()` (SDK 50-52's Objective-C `AppDelegate.mm` gets the
+> same redirect).
 
 ```
 yarn add react-native-code-push react-native-code-push-plugin

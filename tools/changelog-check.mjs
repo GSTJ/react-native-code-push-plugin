@@ -19,7 +19,9 @@
 //      including the `ci!:` case — `ci` is hidden and its breaking note still
 //      has to surface
 //   3. the recommended bump respects `effect`, so a release of nothing but
-//      `build:` and `chore:` commits cannot come out a minor
+//      `build:` and `chore:` commits cannot come out a minor, and
+//      `build(deps):` specifically comes out a patch (the scope carve-out
+//      that lets dependency and security patches actually ship)
 //
 // Then it renders the same history through a sabotaged type list and fails if
 // *that* passes. An assertion that cannot fail is worth nothing.
@@ -46,6 +48,10 @@ const cliPath = join(dirname(cliEntry), "cli", "index.js");
  * What each type is for. `bump` can raise the version, `changelog` renders
  * without raising it, `hidden` does neither.
  *
+ * A key is `type` on its own, or `type:scope` for a scope-qualified entry
+ * (only `build:deps` needs one today: security and dependency patches land as
+ * `build(deps):`, and that's the one `build` subtype allowed to bump).
+ *
  * @type {Record<string, "bump" | "changelog" | "hidden">}
  */
 const POLICY = {
@@ -54,6 +60,7 @@ const POLICY = {
   fix: "bump",
   perf: "bump",
   revert: "bump",
+  "build:deps": "bump",
   build: "changelog",
   refactor: "changelog",
   chore: "changelog",
@@ -69,6 +76,7 @@ const COMMITS = [
   "feat: add a thing",
   "fix: correct a thing",
   "build: shrink the tarball",
+  "build(deps): patch a vulnerable package",
   "refactor: rewrite the internals",
   "chore(deps): bump something",
   "docs: update the readme",
@@ -80,13 +88,14 @@ const COMMITS = [
   "ci!: require node 24\n\nBREAKING CHANGE: node 22 is no longer supported",
 ];
 
-// Subject fragment -> the type it was committed under. Matching on subjects
-// rather than section headings keeps the check working in a repo that renames
-// its sections.
+// Subject fragment -> the type (or `type:scope`) it was committed under.
+// Matching on subjects rather than section headings keeps the check working
+// in a repo that renames its sections.
 const SUBJECTS = {
   feat: "add a thing",
   fix: "correct a thing",
   build: "shrink the tarball",
+  "build:deps": "patch a vulnerable package",
   refactor: "rewrite the internals",
   chore: "bump something",
   docs: "update the readme",
@@ -204,14 +213,23 @@ const expect = (label, condition) => {
   if (!condition) failures.push(label);
 };
 
-// 1. The type list says what the policy says.
-for (const [type, effect] of Object.entries(POLICY)) {
-  const entry = TYPES.find((candidate) => candidate.type === type);
-  expect(`${type} is in the type list`, entry !== undefined);
-  expect(`${type} is "${effect}"`, entry?.effect === effect);
+// 1. The type list says what the policy says. A POLICY key is `type` or
+// `type:scope`; TYPES entries are matched the same way conventional-changelog
+// itself resolves them (findTypeEntry), so a scope-qualified entry has to
+// come before its scope-less fallback or this can't tell them apart.
+const keyFor = (entry) =>
+  entry.scope ? `${entry.type}:${entry.scope}` : entry.type;
+
+for (const [key, effect] of Object.entries(POLICY)) {
+  const [type, scope] = key.split(":");
+  const entry = TYPES.find(
+    (candidate) => candidate.type === type && candidate.scope === scope,
+  );
+  expect(`${key} is in the type list`, entry !== undefined);
+  expect(`${key} is "${effect}"`, entry?.effect === effect);
 }
 for (const entry of TYPES) {
-  expect(`${entry.type} is covered by the policy`, entry.type in POLICY);
+  expect(`${keyFor(entry)} is covered by the policy`, keyFor(entry) in POLICY);
 }
 
 /**
@@ -258,6 +276,7 @@ const bumps = {
   breaking: await bumpFor(["feat!: drop the old API"]),
   feature: await bumpFor(["feat: add a thing"]),
   fix: await bumpFor(["fix: correct a thing"]),
+  buildDeps: await bumpFor(["build(deps): patch a vulnerable package"]),
   changelogOnly: await bumpFor([
     "build: shrink the tarball",
     "refactor: rewrite the internals",
@@ -270,6 +289,10 @@ const bumps = {
 expect("a breaking feat is a major", bumps.breaking === "major");
 expect("a feat is a minor", bumps.feature === "minor");
 expect("a fix is a patch", bumps.fix === "patch");
+expect(
+  `a build(deps) is a patch (got ${bumps.buildDeps})`,
+  bumps.buildDeps === "patch",
+);
 expect(
   `build/refactor/chore/docs alone do not bump (got ${bumps.changelogOnly})`,
   bumps.changelogOnly === null,
@@ -318,7 +341,7 @@ if (sabotagedFailures.length === 0) {
 }
 
 console.log(
-  `changelog preset check passed (${COMMITS.length} synthetic commits, 3 breaking; bumps: feat!=${bumps.breaking}, feat=${bumps.feature}, fix=${bumps.fix}, changelog-only=${bumps.changelogOnly}, hidden-only=${bumps.hiddenOnly})`,
+  `changelog preset check passed (${COMMITS.length} synthetic commits, 3 breaking; bumps: feat!=${bumps.breaking}, feat=${bumps.feature}, fix=${bumps.fix}, build(deps)=${bumps.buildDeps}, changelog-only=${bumps.changelogOnly}, hidden-only=${bumps.hiddenOnly})`,
 );
 console.log(
   `negative control passed (hiding the visible types breaks ${sabotagedFailures.length} assertions: ${sabotagedFailures.join(", ")})`,

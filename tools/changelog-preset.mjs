@@ -32,6 +32,19 @@
 // touching nothing, and the release workflow's `increment` input is there to
 // force a version out anyway when one is wanted.
 //
+// `build(deps)` is the one exception, and it's a deliberate carve-out, not a
+// loosening of the rule above: three security patches (#37, #38, #43, #44,
+// #45) landed as `build(deps):` and every one of them got the generic `build`
+// treatment, so release-it correctly found nothing to release and none of
+// them ever reached npm. `findTypeEntry` (in
+// conventional-changelog-conventionalcommits) matches on type *and* scope
+// before falling back to the scope-less entry, so a `build(deps)` commit
+// bumps a patch while a scope-less `build:` (tooling, tsconfig, oxfmt) still
+// doesn't. The entry has to sit before the generic `build` entry below,
+// `.find()` takes the first match. `chore(deps)` stays changelog-only:
+// history only ever uses it for tooling policy (release-age windows, allowing
+// magic-* through), never for a version bump.
+//
 // Breaking changes are not configurable here and don't need to be. The
 // preset's writer sets `discard = false` the moment a commit carries a note,
 // so a `BREAKING CHANGE:` footer or a `!` renders its own section whatever
@@ -46,6 +59,7 @@ export const TYPES = [
   { type: "fix", section: "Bug Fixes", effect: "bump" },
   { type: "perf", section: "Performance", effect: "bump" },
   { type: "revert", section: "Reverts", effect: "bump" },
+  { type: "build", scope: "deps", section: "Build System", effect: "bump" },
   { type: "build", section: "Build System", effect: "changelog" },
   { type: "refactor", section: "Code Refactoring", effect: "changelog" },
   { type: "chore", section: "Chores", effect: "changelog" },
