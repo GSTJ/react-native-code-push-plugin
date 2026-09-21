@@ -217,7 +217,8 @@ const expect = (label, condition) => {
 // `type:scope`; TYPES entries are matched the same way conventional-changelog
 // itself resolves them (findTypeEntry), so a scope-qualified entry has to
 // come before its scope-less fallback or this can't tell them apart.
-const keyFor = (entry) => (entry.scope ? `${entry.type}:${entry.scope}` : entry.type);
+const keyFor = (entry) =>
+  entry.scope ? `${entry.type}:${entry.scope}` : entry.type;
 
 for (const [key, effect] of Object.entries(POLICY)) {
   const [type, scope] = key.split(":");
