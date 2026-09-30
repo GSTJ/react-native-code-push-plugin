@@ -61,5 +61,8 @@ overrides:
   # bumped anyway per Dependabot alerts #57/#58.
   js-yaml@<3.15.2: ^3.15.2
   js-yaml@>=4.0.0 <4.3.2: ^4.3.2
+  # GHSA NAT64 classifier gap (SSRF). Dev-only via release-it > proxy-agent >
+  # socks, bumped per Dependabot alert #62.
+  ip-address@>=10.2.0 <10.5.1: ^10.5.1
 patchedDependencies:
   image-size@1.2.1: patches/image-size@1.2.1.patch
