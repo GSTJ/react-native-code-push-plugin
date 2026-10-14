@@ -6,6 +6,8 @@ audit:
     - GHSA-5p2g-fcmc-qvqq
 minimumReleaseAge: 20160
 minimumReleaseAgeExclude:
+  # Security fix, a few hours short of the 14-day window.
+  - source-map-js@1.2.2
   # Grandfather the exact lockfile from 2026-08-04. Future versions still have
   # to clear the full release-age window.
   - "@eslint-community/eslint-utils@4.10.1"
@@ -50,6 +52,10 @@ minimumReleaseAgeExclude:
 # no other home, so this file carries the old Yarn pins and scoped security
 # fixes. Yarn's `**/a/b` globs become pnpm's `a>b` selectors.
 overrides:
+  # Dependabot: source-map-js <1.2.2, compression <1.8.2, tinypool <2.1.2 (dev-only tooling).
+  source-map-js@<1.2.2: ^1.2.2
+  compression@<1.8.2: ^1.8.2
+  tinypool@<2.1.2: ^2.1.2
   # GHSA (Dependabot): shell-quote >=1.8.4 <1.11.0 is vulnerable. react-devtools-core
   # (dev-only, via react-native) pulls it in.
   shell-quote@>=1.8.4 <1.11.0: ^1.11.0
