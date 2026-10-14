@@ -50,6 +50,9 @@ minimumReleaseAgeExclude:
 # no other home, so this file carries the old Yarn pins and scoped security
 # fixes. Yarn's `**/a/b` globs become pnpm's `a>b` selectors.
 overrides:
+  # GHSA (Dependabot): shell-quote >=1.8.4 <1.11.0 is vulnerable. react-devtools-core
+  # (dev-only, via react-native) pulls it in.
+  shell-quote@>=1.8.4 <1.11.0: ^1.11.0
   "@expo/plist>@xmldom/xmldom": 0.8.15
   "plist>@xmldom/xmldom": 0.9.12
   "@typescript-eslint/typescript-estree>minimatch": 9.0.7
