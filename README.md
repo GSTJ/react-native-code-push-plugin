@@ -59,3 +59,18 @@ Next, rebuild your app as described in the ["Adding custom native code"](https:/
 [lib-repo]: https://github.com/microsoft/react-native-code-push
 [server-repo]: https://github.com/microsoft/code-push-server
 [expo-updates]: https://docs.expo.dev/versions/latest/sdk/updates/
+
+## More from the author
+
+Made by [Gabriel Taveira](https://www.gabrieltaveira.dev), who also built:
+
+<table>
+  <tr>
+    <td width="64"><a href="https://curvinha.app/?utm_source=react-native-code-push-plugin&utm_medium=readme"><img src="https://curvinha.app/assets/apple-touch-icon.png" width="48" height="48" alt="Curvinha icon"></a></td>
+    <td><a href="https://curvinha.app/?utm_source=react-native-code-push-plugin&utm_medium=readme"><b>Curvinha</b></a>: interior design for iPhone. Show your room and get a 3D proposal with real furniture from Brazilian stores. <a href="https://apps.apple.com/br/app/id6816957870?pt=126480814&ct=react-native-code-push-plugin-readme">App Store</a></td>
+  </tr>
+  <tr>
+    <td width="64"><a href="https://pegada.app/?utm_source=react-native-code-push-plugin&utm_medium=readme"><img src="https://pegada.app/apple-touch-icon.png" width="48" height="48" alt="Pegada icon"></a></td>
+    <td><a href="https://pegada.app/?utm_source=react-native-code-push-plugin&utm_medium=readme"><b>Pegada</b></a>: a new friend for your dog, nearby. <a href="https://apps.apple.com/br/app/id6450865592?pt=126480814&ct=react-native-code-push-plugin-readme">App Store</a></td>
+  </tr>
+</table>
