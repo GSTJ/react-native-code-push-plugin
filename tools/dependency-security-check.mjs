@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
 import { createRequire } from "node:module";
+import { createServer } from "node:net";
 import { dirname, join } from "node:path";
 
 const rootRequire = createRequire(import.meta.url);
@@ -232,6 +233,48 @@ for (const vulnerablePackage of [
     `${vulnerablePackage} must not be installed`,
   );
 }
+
+for (const [name, version] of [
+  ["node-forge", "1.4.1"],
+  ["ip-address", "10.7.4"],
+]) {
+  assert.equal(versionAt(packageInStore(name, version)), version);
+}
+
+// Exercise the same undici instance release-it resolves. An early socket close
+// after excessive content codings must reject fetch without crashing Node.
+const undiciPackage = packageInStore("undici", "7.30.1");
+const { fetch } = requireFrom(undiciPackage)("undici");
+assert.equal(versionAt(undiciPackage), "7.30.1");
+const server = createServer((socket) => {
+  socket.once("data", () => {
+    socket.end(
+      "HTTP/1.1 200 OK\r\nContent-Encoding: gzip, gzip, gzip, gzip, gzip, gzip\r\nContent-Length: 100\r\nConnection: close\r\n\r\n",
+    );
+  });
+});
+await new Promise((resolve) => {
+  server.listen(0, "127.0.0.1", resolve);
+});
+try {
+  await assert.rejects(
+    fetch(`http://127.0.0.1:${server.address().port}`, {
+      signal: AbortSignal.timeout(3_000),
+    }),
+    (error) => /too many content-encodings/.test(error.cause?.message),
+  );
+  // Give an orphaned stream error time to surface after fetch rejects.
+  await new Promise((resolve) => {
+    setTimeout(resolve, 100);
+  });
+} finally {
+  await new Promise((resolve) => {
+    server.close(resolve);
+  });
+}
+console.log(
+  "undici 7.30.1 rejected excessive content encodings without crashing.",
+);
 
 console.log(
   "Dependency security checks passed for @xmldom/xmldom, js-yaml, nanoid and image-size.",
