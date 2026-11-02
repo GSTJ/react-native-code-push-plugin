@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       increment:
-        description: "Version increment. Leave empty to infer it from the conventional commits since the last tag."
+        description: "Version increment. Choose auto to infer it from the conventional commits since the last tag."
         required: false
-        default: ""
+        default: "auto"
         type: choice
         options:
-          - ""
+          - "auto"
           - patch
           - minor
           - major
@@ -57,30 +57,55 @@ jobs:
 
       - run: pnpm run build
 
+      - run: pnpm run security:check
+
+      # Version planning must run before either registry or GitHub auth checks.
+      - name: Plan release
+        id: plan
+        env:
+          INCREMENT: ${{ inputs.increment }}
+        run: |
+          args=(--ci --release-version --npm.publish=false --github.release=false)
+          if [ -n "$INCREMENT" ] && [ "$INCREMENT" != "auto" ]; then
+            args+=("--increment=$INCREMENT")
+          fi
+          version=$(pnpm exec release-it "${args[@]}")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ -z "$version" ]; then
+            echo "::notice::No new version to release. Nothing was published or tagged."
+          else
+            echo "::notice::Planned release v$version."
+          fi
+
+      - name: Configure release identity
+        if: ${{ steps.plan.outputs.version != '' }}
+        run: |
+          git config user.email "gabrielstaveira@gmail.com"
+          git config user.name "Gabriel Taveira"
+
+      - name: Preview release
+        if: ${{ inputs.dry-run && steps.plan.outputs.version != '' }}
+        run: pnpm exec release-it --ci --dry-run --increment=${{ steps.plan.outputs.version }} --npm.publish=false --github.release=false
+
       # Publishes to npm, pushes the annotated tag and creates the GitHub
       # release. The version bump commit stays local, see .release-it.mjs.
       - name: Release
         id: release
+        if: ${{ !inputs.dry-run && steps.plan.outputs.version != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          INCREMENT: ${{ inputs.increment }}
-          DRY_RUN: ${{ inputs.dry-run }}
+          VERSION: ${{ steps.plan.outputs.version }}
         run: |
-          git config user.email "gabrielstaveira@gmail.com"
-          git config user.name "Gabriel Taveira"
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "::error::v$VERSION is due, but NPM_TOKEN is missing. Configure npm publishing credentials before retrying. Nothing was published or tagged."
+            exit 1
+          fi
           npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
-
-          args="--ci"
-          if [ -n "$INCREMENT" ]; then
-            args="$args --increment=$INCREMENT"
-          fi
-          if [ "$DRY_RUN" = "true" ]; then
-            args="$args --dry-run"
-          fi
+          trap 'npm config delete //registry.npmjs.org/:_authToken' EXIT
 
           before=$(node -p "require('./package.json').version")
-          pnpm run release $args
+          pnpm run release --ci --increment="$VERSION"
           after=$(node -p "require('./package.json').version")
 
           echo "version=$after" >> "$GITHUB_OUTPUT"
