@@ -279,3 +279,116 @@ console.log(
 console.log(
   "Dependency security checks passed for @xmldom/xmldom, js-yaml, nanoid and image-size.",
 );
+
+// The exact patch guards and exploit controls run before audit exemptions apply.
+const deepmergePackage = packageFrom(
+  packageFrom(expoPackage, "@expo/config"),
+  "deepmerge",
+);
+for (const entry of ["index.js", "dist/cjs.js", "dist/umd.js"]) {
+  const file = join(dirname(deepmergePackage), entry);
+  assert.match(readFileSync(file, "utf8"), /key === "__proto__"/);
+  // The source entry is unbundled; npm consumers load the bundled builds.
+  const runtimeEntry =
+    entry === "index.js"
+      ? join(dirname(deepmergePackage), "dist/cjs.js")
+      : file;
+  const merge = rootRequire(runtimeEntry);
+  for (const poison of [
+    JSON.parse('{"__proto__":{"polluted":true}}'),
+    Object.assign(
+      Object.create(null),
+      JSON.parse('{"__proto__":{"polluted":true}}'),
+    ),
+  ]) {
+    for (const result of [
+      merge(poison, {}),
+      merge({}, poison),
+      merge(Object.create(null), poison),
+    ]) {
+      assert.equal(Object.getPrototypeOf(result), Object.prototype);
+      assert.equal(result.polluted, undefined);
+    }
+  }
+  assert.deepEqual(
+    merge({ a: [1], nested: { x: 1 } }, { a: [2], nested: { y: 2 } }),
+    { a: [1, 2], nested: { x: 1, y: 2 } },
+  );
+}
+const mmPackage = packageFrom(packageInStore("glob", "14.0.3"), "minimatch");
+const mm = requireFrom(mmPackage)("minimatch");
+assert.equal(typeof mm, "function");
+assert.equal(mm("src/index.ts", "**/*.ts"), true);
+assert.equal(mm.minimatch("src/index.ts", "**/*.ts"), true);
+assert.equal(new mm.Minimatch("**/*.ts").match("src/index.ts"), true);
+assert.equal(mm.defaults({ dot: true })(".hidden", "*"), true);
+// Exercise the amplified pattern in a child so a regression cannot hang CI.
+const probe = spawnSync(
+  process.execPath,
+  [
+    "-e",
+    `const mm = require(${JSON.stringify(dirname(mmPackage))}); new mm.Minimatch("a/" + "**/../".repeat(40) + "z", { optimizationLevel: 2 });`,
+  ],
+  { timeout: 3000 },
+);
+assert.equal(probe.status, 0, probe.stderr?.toString());
+const globPackage = packageInStore("glob", "14.0.3");
+const glob = requireFrom(globPackage)("glob");
+assert.ok(glob.globSync("src/**/*.ts").includes("src/index.ts"));
+const controller = new AbortController();
+controller.abort(new Error("security probe cancelled"));
+await assert.rejects(
+  glob.glob("**/*", { signal: controller.signal }),
+  /security probe cancelled/,
+);
+const cliPackage = packageFrom(expoPackage, "@expo/cli");
+const cliRequire = requireFrom(cliPackage);
+const { z } = cliRequire("zod");
+let parsedElements = 0;
+const element = z.string().refine(() => {
+  parsedElements++;
+  return true;
+});
+const boundedSchemas = [z.array(element).max(1), z.array(element).length(1)];
+for (const schema of boundedSchemas) {
+  assert.equal(schema.safeParse(["a", "b"]).success, false);
+}
+const asyncResults = await Promise.all(
+  boundedSchemas.map((schema) => schema.safeParseAsync(["a", "b"])),
+);
+for (const result of asyncResults) assert.equal(result.success, false);
+assert.equal(parsedElements, 0);
+const { PluginSchema, DevToolsPluginOutputSchema } = cliRequire(
+  join(dirname(cliPackage), "build/src/start/server/DevToolsPlugin.schema.js"),
+);
+assert.equal(
+  PluginSchema.safeParse({ packageName: "probe", packageRoot: "/tmp/probe" })
+    .success,
+  true,
+);
+assert.equal(PluginSchema.safeParse({ packageName: 12 }).success, false);
+assert.equal(
+  DevToolsPluginOutputSchema.safeParse([
+    { type: "text", text: "hello", level: "info" },
+  ]).success,
+  true,
+);
+const ftpPackage = packageInStore("basic-ftp", "6.2.5");
+const ftp = requireFrom(ftpPackage)("basic-ftp");
+const client = new ftp.Client();
+for (const method of ["access", "lastMod", "downloadTo", "close"])
+  assert.equal(typeof client[method], "function");
+client.close();
+const ftpParserPath = join(dirname(ftpPackage), "dist/parseListUnix.js");
+const ftpProbe = spawnSync(
+  process.execPath,
+  [
+    "-e",
+    `const {parseLine} = require(${JSON.stringify(ftpParserPath)}); parseLine("-rw-r--r-- 1 " + "x ".repeat(100000));`,
+  ],
+  { timeout: 3000 },
+);
+assert.equal(ftpProbe.status, 0, ftpProbe.stderr?.toString());
+console.log(
+  "Security migrations passed: deepmerge prototype controls, callable/named minimatch, bounded patterns, glob cancellation, Zod size gates and Expo schemas, FTP parser.",
+);

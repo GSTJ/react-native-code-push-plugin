@@ -1,0 +1,10 @@
+diff --git a/dist/commonjs/index.js b/dist/commonjs/index.js
+index eb1c915f43b2debf5faa7ac3a73c262a161c7a4f..ec0c1a8311e7d3ca6f0846ce624edbb4b3b855c3 100644
+--- a/dist/commonjs/index.js
++++ b/dist/commonjs/index.js
+@@ -1548,3 +1548,5 @@ exports.minimatch.Minimatch = Minimatch;
+ exports.minimatch.escape = escape_js_1.escape;
+ exports.minimatch.unescape = unescape_js_1.unescape;
+ //# sourceMappingURL=index.js.map
++// Keep legacy CommonJS callers callable while retaining all modern named exports.
++module.exports = Object.assign(exports.minimatch, exports);
