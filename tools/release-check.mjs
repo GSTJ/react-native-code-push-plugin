@@ -40,6 +40,8 @@ for (const [message, increment, expected] of cases) {
       '{"name":"react-native-code-push-plugin","version":"2.0.1"}\n',
     );
     git("init", "--quiet", "--initial-branch", "master");
+    git("config", "user.name", "Gabriel Taveira");
+    git("config", "user.email", "gabrielstaveira@gmail.com");
     git("add", ".");
     git("commit", "--quiet", "-m", "chore: initial");
     git("tag", "-a", "v2.0.1", "-m", "v2.0.1");
