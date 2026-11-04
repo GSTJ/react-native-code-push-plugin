@@ -1,8 +1,15 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFileSync, readdirSync } from "node:fs";
+import {
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import { createServer } from "node:net";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 
 const rootRequire = createRequire(import.meta.url);
@@ -314,6 +321,34 @@ for (const entry of ["index.js", "dist/cjs.js", "dist/umd.js"]) {
     merge({ a: [1], nested: { x: 1 } }, { a: [2], nested: { y: 2 } }),
     { a: [1, 2], nested: { x: 1, y: 2 } },
   );
+}
+// Exercise Expo's config merge, where this development dependency is used.
+const { modifyConfigAsync } = requireFrom(expoPackage)("@expo/config");
+const configProject = mkdtempSync(join(tmpdir(), "code-push-config-security-"));
+try {
+  writeFileSync(
+    join(configProject, "package.json"),
+    '{"name":"security-probe"}',
+  );
+  writeFileSync(
+    join(configProject, "app.json"),
+    '{"expo":{"name":"probe","slug":"probe","extra":{"safe":true,"__proto__":{"polluted":true}}}}',
+  );
+  const result = await modifyConfigAsync(
+    configProject,
+    { extra: { added: true } },
+    { skipSDKVersionRequirement: true },
+    { dryRun: true },
+  );
+  assert.equal(result.type, "success");
+  assert.equal(Object.getPrototypeOf(result.config.extra), Object.prototype);
+  assert.equal(result.config.extra.polluted, undefined);
+  assert.deepEqual(result.config.extra, { safe: true, added: true });
+  console.log(
+    "Expo config merge rejected prototype poisoning and preserved safe values.",
+  );
+} finally {
+  rmSync(configProject, { recursive: true, force: true });
 }
 const mmPackage = packageFrom(packageInStore("glob", "14.0.3"), "minimatch");
 const mm = requireFrom(mmPackage)("minimatch");
