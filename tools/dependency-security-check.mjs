@@ -242,7 +242,7 @@ for (const vulnerablePackage of [
 }
 
 for (const [name, version] of [
-  ["node-forge", "1.4.1"],
+  ["node-forge", "1.4.3"],
   ["ip-address", "10.7.4"],
 ]) {
   assert.equal(versionAt(packageInStore(name, version)), version);
