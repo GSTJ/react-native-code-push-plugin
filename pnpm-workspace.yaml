@@ -57,7 +57,7 @@ minimumReleaseAgeExclude:
   - undici@7.29.0
   # Security fix for GHSA-xjj6-f33q-929c, bypass the release-age window.
   - undici@7.30.1
-  - node-forge@1.4.1
+  - node-forge@1.4.3
   - ip-address@10.7.4
   # magic-* is first-party tooling and can update immediately.
   - "magic-*"
@@ -90,8 +90,8 @@ overrides:
   # GHSA NAT64 classifier gap (SSRF). Dev-only via release-it > proxy-agent >
   # socks, bumped per Dependabot alert #62.
   ip-address@>=10.2.0 <10.7.4: 10.7.4
-  # Registry audit: patch certificate parsing advisories.
-  node-forge@<1.4.1: 1.4.1
+  # Registry audit: patch certificate parsing, TLS and HTTP parser advisories.
+  node-forge@<1.4.3: 1.4.3
   # GHSA-xjj6-f33q-929c: malformed responses can crash release-it.
   undici@>=7.0.0 <7.30.1: 7.30.1
   # Major tooling APIs are exercised by dependency-security-check and Jest.
