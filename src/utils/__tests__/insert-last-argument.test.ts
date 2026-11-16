@@ -7,6 +7,18 @@ describe("insertLastArgument", () => {
     );
   });
 
+  it.each(["", " // keep the comment", " /* keep the comment */"])(
+    "preserves an existing trailing comma%s",
+    (comment) => {
+      const result = insertLastArgument(
+        `foo(\n  a = 1,${comment}\n)`,
+        "foo",
+        "b = 2",
+      );
+      expect(result).toBe(`foo(\n  a = 1,\n  b = 2${comment}\n)`);
+    },
+  );
+
   it("fills an empty argument list", () => {
     expect(insertLastArgument(`foo()`, "foo", "c = 1")).toBe(`foo(c = 1)`);
   });
