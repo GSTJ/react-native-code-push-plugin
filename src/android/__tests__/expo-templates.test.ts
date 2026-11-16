@@ -48,6 +48,18 @@ describe("app/build.gradle", () => {
 });
 
 describe("MainApplication", () => {
+  it("accepts a trailing comma after the SDK 57 package list", () => {
+    const template = sdk57MainApplication.replace(
+      "        }\n    )",
+      "        },\n    )",
+    );
+    const result = applyMainApplication(template, "kt");
+    expect(result).toContain(
+      "        },\n      jsBundleFilePath = CodePush.getJSBundleFile()",
+    );
+    expect(result).not.toContain(",,");
+    expect(applyMainApplication(result, "kt")).toBe(result);
+  });
   it("passes the CodePush bundle to the SDK 57 ReactHost factory", () => {
     const result = applyMainApplication(sdk57MainApplication, "kt");
 

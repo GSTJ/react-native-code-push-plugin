@@ -137,5 +137,6 @@ export function insertLastArgument(
   const closeIndent = /^[\t ]*/.exec(source.slice(lineStart, closeIndex))?.[0];
   const indent = `${closeIndent ?? ""}  `;
 
-  return `${source.slice(0, endOfArguments)},\n${indent}${argument}${source.slice(endOfArguments)}`;
+  const separator = source[endOfArguments - 1] === "," ? "" : ",";
+  return `${source.slice(0, endOfArguments)}${separator}\n${indent}${argument}${source.slice(endOfArguments)}`;
 }
