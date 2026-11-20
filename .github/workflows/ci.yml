@@ -31,7 +31,7 @@ jobs:
       #
       # One `extra-command`, so they're chained. `&&` short-circuits, which is
       # what we want: either failing fails the job.
-      extra-command: npm pack --dry-run && pnpm run changelog:check
+      extra-command: npm pack --dry-run && pnpm run changelog:check && pnpm run security:check
       # Nothing here uses turbo.
       turbo-cache: false
 

@@ -34,7 +34,7 @@
     "test": "node tools/dependency-security-check.mjs && node tools/release-check.mjs && jest",
     "prepare": "pnpm run build",
     "release": "release-it",
-    "security:check": "node tools/dependency-security-check.mjs && pnpm audit --audit-level high"
+    "security:check": "node tools/dependency-security-check.mjs && node tools/security-audit.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
