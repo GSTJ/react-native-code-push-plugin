@@ -104,3 +104,5 @@ patchedDependencies:
   deepmerge@4.3.1: patches/deepmerge@4.3.1.patch
   image-size@1.2.1: patches/image-size@1.2.1.patch
   minimatch@11.0.4: patches/minimatch@11.0.4.patch
+  picomatch@2.3.2: patches/picomatch@2.3.2.patch
+  picomatch@4.0.5: patches/picomatch@4.0.5.patch
